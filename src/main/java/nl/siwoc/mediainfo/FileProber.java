@@ -11,8 +11,8 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import nl.siwoc.mediainfo.mkv.MKVFile;
-import nl.siwoc.mediainfo.riff.RIFFChunk;
+import nl.siwoc.mediainfo.mkv.MKVUtils;
+import nl.siwoc.mediainfo.qtff.QTFFUtils;
 import nl.siwoc.mediainfo.riff.RIFFUtils;
 
 public class FileProber {
@@ -22,7 +22,7 @@ public class FileProber {
 	public static void main(String[] args) {
 		try {
 			new File("log").mkdir();
-			FileHandler handler = new FileHandler("log/FileProber.log", 50000, 2, true);
+			FileHandler handler = new FileHandler("log/FileProber.log", 500000, 2, true);
 			handler.setFormatter(new SimpleFormatter());
 			Logger.getLogger("").addHandler(handler);
 		} catch (SecurityException e) {
@@ -30,9 +30,9 @@ public class FileProber {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
+		String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
 		//String filename = "O:/Series/Red Dwarf/S01/Red Dwarf S01E01 - The End.avi";
-		String filename = "O:/downloads/Aladdin (1992)/Aladdin (1992).mkv";
+		//String filename = "O:/downloads/Aladdin (1992)/Aladdin (1992).mkv";
 		FileProber fp = new FileProber();
 		FileProber.setLogLevel(Level.FINER);
 		MediaInfo mediaInfo = fp.getMediaInfo(filename);
@@ -48,48 +48,46 @@ public class FileProber {
 		}
 	}
 	public MediaInfo getMediaInfo(String filename) {
-		MediaInfo mediaInfo = null;
 		try {
-			RIFFChunk riff = RIFFUtils.parse(filename);
-			if (riff instanceof MediaInfo) {
-				return (MediaInfo)riff;
-			} else {
-				LOGGER.log(Level.INFO, "RIFF but not MediaInfo: " + riff.getClass().getName() + " - fileType: [" + riff.getFileType() + "] size: " + riff.getSize());
-			}
+			return RIFFUtils.parse(filename);
 		} catch (Exception e) {
 			LOGGER.log(Level.INFO, e.getMessage());
 		}
 		try {
-			return new MKVFile(filename);
+			return MKVUtils.parse(filename);
 		} catch (Exception e) {
 			LOGGER.log(Level.INFO, e.getMessage());
 		}
-		if (mediaInfo == null) {
-			try (FileInputStream fis = new FileInputStream(filename)){
-				System.out.println(fis.available());
-				byte[] b = new byte[10000];
-				fis.read(b);
-				fis.close();
-				FileOutputStream fos = new FileOutputStream("log/mediafilenew.txt");
-				fos.write(b);
-				fos.close();
-				System.out.println(new String(b, "ASCII"));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			return QTFFUtils.parse(filename);
+		} catch (Exception e) {
+			LOGGER.log(Level.INFO, e.getMessage());
 		}
-		return mediaInfo;
+
+		try (FileInputStream fis = new FileInputStream(filename)){
+			System.out.println(new File(filename).length());
+			byte[] b = new byte[10000];
+			fis.read(b);
+			fis.close();
+			FileOutputStream fos = new FileOutputStream("log/mediafilenew.txt");
+			fos.write(b);
+			fos.close();
+			//System.out.println(new String(b, "ASCII"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 
 	}
-	
+
 	public static void setLogLevel(Level level) {
-	    Logger rootLogger = LogManager.getLogManager().getLogger("");
-	    Handler[] handlers = rootLogger.getHandlers();
-	    rootLogger.setLevel(level);
-	    for (Handler h : handlers) {
-	        if(h instanceof FileHandler)
-	            h.setLevel(level);
-	    }
+		Logger rootLogger = LogManager.getLogManager().getLogger("");
+		Handler[] handlers = rootLogger.getHandlers();
+		rootLogger.setLevel(level);
+		for (Handler h : handlers) {
+			if(h instanceof FileHandler)
+				h.setLevel(level);
+		}
 	}
 }

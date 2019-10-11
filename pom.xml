@@ -2,7 +2,31 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.siwoc.mediainfo</groupId>
   <artifactId>MediaInfo</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.8</version>
   <name>MediaInfo</name>
   <description>File parser to collect media info</description>
+
+  <dependencies>
+  	<dependency>
+  		<groupId>org.ebml</groupId>
+  		<artifactId>jebml</artifactId>
+  		<version>2.2</version>
+  	</dependency>
+  </dependencies>
+
+	<build>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+
 </project>
