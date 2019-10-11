@@ -1,5 +1,7 @@
 package nl.siwoc.mediainfo.mkv;
 
+import java.util.logging.Logger;
+
 import org.ebml.io.FileDataSource;
 import org.ebml.matroska.MatroskaFile;
 import org.ebml.matroska.MatroskaFileTrack;
@@ -9,6 +11,9 @@ import nl.siwoc.mediainfo.MediaInfo;
 
 public class MKVFile extends MatroskaFile implements MediaInfo {
 
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = Logger.getLogger(MKVFile.class.getName());
+	
 	private MatroskaFileTrack videoTrack;
 	private MatroskaFileTrack audioTrack;
 	
@@ -51,7 +56,7 @@ public class MKVFile extends MatroskaFile implements MediaInfo {
 	@Override
 	public String getVideoCodec() {
 		if (getVideoTrack() != null) {
-			return getVideoTrack().getCodecID();
+			return getVideoTrack().getCodecID().split("/")[0].substring(2).toLowerCase();
 		}
 		return null;
 	}
@@ -75,7 +80,7 @@ public class MKVFile extends MatroskaFile implements MediaInfo {
 	@Override
 	public String getAudioCodec() {
 		if (getAudioTrack() != null) {
-			return getAudioTrack().getCodecID();
+			return getAudioTrack().getCodecID().split("/")[0].substring(2).toLowerCase();
 		}
 		return null;
 	}

@@ -22,10 +22,10 @@ public class AVIRIFF extends RIFFChunk implements MediaInfo{
 		this.hdrl = headerList;
 	}
 
-	public AVIRIFF(int size, InputStream is) throws Exception {
+	public AVIRIFF(String fileType, int size, InputStream is) throws Exception {
 		setId("RIFF");
 		setSize(size);
-		setFileType("AVI ");
+		setFileType(fileType);
 		String fourCC;
 		fourCC = RIFFUtils.readFourCC(is);
 		if (!"LIST".equals(fourCC)) {
@@ -64,7 +64,7 @@ public class AVIRIFF extends RIFFChunk implements MediaInfo{
 	@Override
 	public String getVideoCodec() {
 		if (getHdrl().getVideoStreams().size() > 0) {
-			return getHdrl().getVideoStreams().get(0).getHandler();
+			return getHdrl().getVideoStreams().get(0).getHandler().toLowerCase();
 		} else {
 			return null;
 		}
@@ -83,7 +83,7 @@ public class AVIRIFF extends RIFFChunk implements MediaInfo{
 	@Override
 	public String getAudioCodec() {
 		if (getHdrl().getAudioStreams().size() > 0)
-			return getHdrl().getAudioStreams().get(0).getHandler();
+			return getHdrl().getAudioStreams().get(0).getHandler().toLowerCase();
 		else {
 			return null;
 		}

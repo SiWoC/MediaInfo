@@ -1,7 +1,6 @@
 package nl.siwoc.mediainfo.riff.avi;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -104,7 +103,7 @@ public class MainHeader extends Chunk {
 		this.frameHeight = frameHeight;
 	}
 
-	public MainHeader(int size, byte[] data) throws IOException {
+	public MainHeader(int size, byte[] data) throws Exception {
 		setId("avih");
 		setSize(size);
 		try (InputStream is = new ByteArrayInputStream(data)){
