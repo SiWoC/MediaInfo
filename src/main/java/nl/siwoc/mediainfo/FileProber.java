@@ -72,7 +72,7 @@ public class FileProber {
 			FileOutputStream fos = new FileOutputStream("log/mediafilenew.txt");
 			fos.write(b);
 			fos.close();
-			//System.out.println(new String(b, "ASCII"));
+			System.out.println(new String(b, "ASCII"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
