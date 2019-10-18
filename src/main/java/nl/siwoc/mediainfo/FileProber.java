@@ -30,9 +30,10 @@ public class FileProber {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
+		//String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
 		//String filename = "O:/Series/Red Dwarf/S01/Red Dwarf S01E01 - The End.avi";
 		//String filename = "O:/downloads/Aladdin (1992)/Aladdin (1992).mkv";
+		String filename = "O:\\downloads\\The Throwaways (2015)\\Vectronic Presents _ The Throwaways (2015) 720p.WEB-DL.AC3_x264. NL Subs Ingebakken\\The Throwaways (2015) 720p.WEB-DL.AC3_x264.avi";
 		FileProber fp = new FileProber();
 		FileProber.setLogLevel(Level.FINER);
 		MediaInfo mediaInfo = fp.getMediaInfo(filename);
@@ -72,7 +73,7 @@ public class FileProber {
 			FileOutputStream fos = new FileOutputStream("log/mediafilenew.txt");
 			fos.write(b);
 			fos.close();
-			System.out.println(new String(b, "ASCII"));
+			//System.out.println(new String(b, "ASCII"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

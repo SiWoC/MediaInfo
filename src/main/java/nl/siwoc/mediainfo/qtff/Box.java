@@ -12,7 +12,7 @@ public class Box {
 	
 	private String type;
 	private int size;
-	private ArrayList<Box> childBoxes = new ArrayList<Box>();
+	private ArrayList<Box> children = new ArrayList<Box>();
 	private Box parent = null;
 
 	public String getType() {
@@ -32,7 +32,7 @@ public class Box {
 	}
 	
 	public Box getChild(String childTypeToGet) {
-		for (Box child : childBoxes) {
+		for (Box child : children) {
 			if (childTypeToGet.equals(child.getType())) {
 				return child;
 			}
@@ -41,7 +41,7 @@ public class Box {
 	}
 	
 	public void addChild(Box child) {
-		childBoxes.add(child);
+		children.add(child);
 	}
 
 	public Box getParent() {
@@ -104,9 +104,9 @@ public class Box {
 
     protected Box searchUp(String type) {
 		Box up = getParent();
-		System.out.println("Searching up for [" + type + "]");
+		LOGGER.finer("Searching up for [" + type + "]");
 	    while (up != null) {
-			System.out.println("Found up [" + up.getType() + "]");
+	    	LOGGER.finer("Found up [" + up.getType() + "]");
 	    	if (up.getType().equals(type)) {
 	    		return up;
 	    	}
@@ -120,7 +120,7 @@ public class Box {
 			System.out.print("  ");
 		}
 		System.out.println("[" + getType() + "]");
-		for (Box child : childBoxes) {
+		for (Box child : children) {
 			child.print(i + 1);
 		}
 		
@@ -129,6 +129,16 @@ public class Box {
 	public String toString() {
 		return "Box{ " +
 	            "type=" + getType() + " }";
+	}
+
+	public ArrayList<Box> getChildren(String type) {
+		ArrayList<Box> childrenOfType = new ArrayList<Box>();
+		for (Box child : children) {
+			if (child.getType().equals(type)) {
+				childrenOfType.add(child);
+			}
+		}
+		return childrenOfType;
 	}
 
     

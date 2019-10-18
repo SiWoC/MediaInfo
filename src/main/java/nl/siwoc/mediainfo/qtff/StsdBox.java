@@ -39,7 +39,9 @@ public class StsdBox extends FullBox {
 	        setFlag(QTFFUtils.readFlag(is));
 	        setEntryCount(QTFFUtils.readIntBE(is));
 	        LOGGER.info(toString());
-	        for (int i = 0 ; i < entryCount ; i++) {
+	        //for (int i = 0 ; i < entryCount ; i++)
+	        // only reading 1 sample
+	        {
 	        	int entrySize = QTFFUtils.readIntBE(is);
 	        	String entryType = QTFFUtils.readFourCC(is);
 	        	byte[] entryData = new byte[entrySize - 8];

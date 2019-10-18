@@ -1,5 +1,7 @@
 package nl.siwoc.mediainfo.qtff;
 
+import java.util.ArrayList;
+
 import nl.siwoc.mediainfo.MediaInfo;
 
 public class MediaBox implements MediaInfo{
@@ -36,25 +38,61 @@ public class MediaBox implements MediaInfo{
 
 	@Override
 	public int getFrameWidth() {
-		// TODO Auto-generated method stub
+		ArrayList<Box> traks = qtff.getChild("moov").getChildren("trak");
+		for (Box box : traks) {
+			if (box instanceof TrakBox) {
+				TrakBox trak = (TrakBox)box;
+				if (trak.getHandlerType().equals("vide")) {
+					return trak.getWidth();
+				}
+			}
+			
+		}
 		return 0;
 	}
 
 	@Override
 	public int getFrameHeight() {
-		// TODO Auto-generated method stub
+		ArrayList<Box> traks = qtff.getChild("moov").getChildren("trak");
+		for (Box box : traks) {
+			if (box instanceof TrakBox) {
+				TrakBox trak = (TrakBox)box;
+				if (trak.getHandlerType().equals("vide")) {
+					return trak.getHeight();
+				}
+			}
+			
+		}
 		return 0;
 	}
 
 	@Override
 	public String getAudioCodec() {
-		// TODO Auto-generated method stub
+		ArrayList<Box> traks = qtff.getChild("moov").getChildren("trak");
+		for (Box box : traks) {
+			if (box instanceof TrakBox) {
+				TrakBox trak = (TrakBox)box;
+				if (trak.getHandlerType().equals("soun")) {
+					return trak.getCodecId();
+				}
+			}
+			
+		}
 		return null;
 	}
 
 	@Override
 	public short getAudioChannels() {
-		// TODO Auto-generated method stub
+		ArrayList<Box> traks = qtff.getChild("moov").getChildren("trak");
+		for (Box box : traks) {
+			if (box instanceof TrakBox) {
+				TrakBox trak = (TrakBox)box;
+				if (trak.getHandlerType().equals("soun")) {
+					return trak.getChannelCount();
+				}
+			}
+			
+		}
 		return 0;
 	}
 

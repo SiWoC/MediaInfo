@@ -5,9 +5,10 @@ import java.io.InputStream;
 
 public class SmhdBox extends FullBox {
 
-	public SmhdBox(int size, byte[] data) throws Exception {
+	public SmhdBox(Box parent, int size, byte[] data) throws Exception {
 		setType("smhd");
 		setSize(size);
+		setParent(parent);
 		LOGGER.info("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());

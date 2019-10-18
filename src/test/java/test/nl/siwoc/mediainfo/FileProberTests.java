@@ -117,9 +117,9 @@ class FileProberTests {
 			Assertions.assertEquals("mp4", mediaInfo.getContainer());
 			Assertions.assertEquals("mp42", mediaInfo.getVideoCodec());
 			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
-			Assertions.assertEquals(416, mediaInfo.getFrameHeight());
-			Assertions.assertEquals("mp3", mediaInfo.getAudioCodec());
+			Assertions.assertEquals(404, mediaInfo.getFrameHeight());
 			Assertions.assertEquals(2, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("mp4a", mediaInfo.getAudioCodec());
 		} else {
 			Assertions.fail("No MediaInfo returned");
 		}
@@ -136,8 +136,8 @@ class FileProberTests {
 			Assertions.assertEquals("qt", mediaInfo.getVideoCodec());
 			Assertions.assertEquals(640, mediaInfo.getFrameWidth());
 			Assertions.assertEquals(480, mediaInfo.getFrameHeight());
-			Assertions.assertEquals("mp3", mediaInfo.getAudioCodec());
-			Assertions.assertEquals(2, mediaInfo.getAudioChannels());
+			Assertions.assertEquals(1, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("sowt", mediaInfo.getAudioCodec());
 		} else {
 			Assertions.fail("No MediaInfo returned");
 		}

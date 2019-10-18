@@ -3,6 +3,7 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -40,6 +41,11 @@ public class QTFFUtils {
 					} else if (fourCC.equals("moov")) {
 						childData = new byte[atomSize - 8];
 						fis.read(childData);
+						FileOutputStream fos = new FileOutputStream("c:/temp/birdmoov.txt");
+						fos.write(0); fos.write(0); fos.write(0); fos.write(atomSize);
+						fos.write("moov".getBytes());
+						fos.write(childData);
+						fos.close();
 						qtff.addChild(new MoovBox(qtff, atomSize, childData));
 					} else {
 						fis.skip(atomSize - 8);
@@ -111,8 +117,8 @@ public class QTFFUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//String filename = "O:/Kinder films/Free Birds (2013)/Free Birds.mp4";
-		String filename = "N:/Casper/huiswerk/Film NL/Dood.MOV";
+		String filename = "O:/Kinder films/Free Birds (2013)/Free Birds.mp4";
+		//String filename = "N:/Casper/huiswerk/Film NL/Dood.MOV";
 		MediaInfo mp4 = QTFFUtils.parse(filename);
 		System.out.println(mp4.getContainer());
 		System.out.println(mp4.getVideoCodec());

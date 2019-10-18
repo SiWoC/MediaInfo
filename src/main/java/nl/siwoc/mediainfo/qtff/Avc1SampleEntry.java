@@ -4,13 +4,55 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class Avc1SampleEntry extends SampleEntry {
+	
+	private short width;
+	private short height;
+	
+	public short getWidth() {
+		return width;
+	}
+
+	public void setWidth(short width) {
+		this.width = width;
+	}
+
+	public short getHeight() {
+		return height;
+	}
+
+	public void setHeight(short height) {
+		this.height = height;
+	}
 
 	public Avc1SampleEntry(Box parent, int size, byte[] data) throws Exception {
 		setType("avc1");
 		setSize(size);
 		setParent(parent);
 		LOGGER.info("Creating " + getType());
+        TrakBox trak = (TrakBox)searchUp("trak");
+        if (trak != null) {
+        	trak.setCodecId(getType());
+        }
 		try (InputStream is = new ByteArrayInputStream(data)){
+			// SampleEntry base
+			// skip 6
+			QTFFUtils.readIntBE(is);
+			QTFFUtils.readShortBE(is);
+			setDataReferenceIndex(QTFFUtils.readShortBE(is));
+			// VisualSampleEntry
+			// skip 16 (0)
+			QTFFUtils.readIntBE(is);
+			QTFFUtils.readIntBE(is);
+			QTFFUtils.readIntBE(is);
+			QTFFUtils.readIntBE(is);
+			setWidth(QTFFUtils.readShortBE(is));
+			setHeight(QTFFUtils.readShortBE(is));
+			if (trak != null) {
+				trak.setWidth(getWidth());
+				trak.setHeight(getHeight());
+			}
+			LOGGER.info(toString());
+			
 		} catch (Exception e) {
 			throw e;
 		}
@@ -30,4 +72,12 @@ public class Avc1SampleEntry extends SampleEntry {
 		 template unsigned int(16) depth = 0x0018;
 		 int(16) pre_defined = -1;
 		 */
+
+	public String toString() {
+		return "Avc1SampleEntry{ " +
+	            "width=" + getWidth() +
+	            ", height=" + getHeight() +
+	            //", height=" + handlerType + 
+	            " }";
+	}
 }

@@ -42,9 +42,10 @@ public class MvhdBox extends FullBox {
 		this.duration = duration;
 	}
 
-	public MvhdBox(int size, byte[] data) throws Exception {
+	public MvhdBox(Box parent, int size, byte[] data) throws Exception {
 		setType("mvhd");
 		setSize(size);
+		setParent(parent);
 		LOGGER.info("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());

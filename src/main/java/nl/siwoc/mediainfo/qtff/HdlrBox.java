@@ -35,8 +35,7 @@ public class HdlrBox extends FullBox {
 	        setComponentType(QTFFUtils.readFourCC(is));
 	        setHandlerType(QTFFUtils.readFourCC(is));
 	        if (getHandlerType().matches("vide|soun")) {
-		        TrakBox trak = null;
-		        trak = (TrakBox)searchUp("trak");
+		        TrakBox trak = (TrakBox)searchUp("trak");
 		        if (trak != null) {
 		        	trak.setHandlerType(getHandlerType());
 		        }

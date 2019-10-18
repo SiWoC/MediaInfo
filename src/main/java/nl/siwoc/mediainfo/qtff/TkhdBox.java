@@ -100,9 +100,10 @@ public class TkhdBox extends FullBox {
 		this.height = height;
 	}
 
-	public TkhdBox(int size, byte[] data) throws Exception {
+	public TkhdBox(Box parent, int size, byte[] data) throws Exception {
 		setType("tkhd");
 		setSize(size);
+		setParent(parent);
 		LOGGER.info("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());
