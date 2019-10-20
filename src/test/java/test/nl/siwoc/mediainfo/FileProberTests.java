@@ -125,7 +125,6 @@ class FileProberTests {
 		}
 	}
 	
-	//"N:\Casper\huiswerk\Film NL\Dood.MOV"
 	@Test
 	void testMOV_1() {
 		//MP4
@@ -143,5 +142,106 @@ class FileProberTests {
 		}
 	}
 	
+	@Test
+	void testDVD_1() {
+		//DVD Menu???, no audio
+		String filename = "O:/Kinder films/G-Force (2009)/VIDEO_TS/VTS_01_0.IFO";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("dvd", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(480, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(0, mediaInfo.getAudioChannels());
+			Assertions.assertEquals(null, mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+
+	@Test
+	void testDVD_2() {
+		//DVD video + audio
+		String filename = "O:/Kinder films/G-Force (2009)/VIDEO_TS/VTS_07_0.IFO";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("dvd", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(576, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+	
+	@Test
+	void testDVD_3() {
+		//DVD video + audio
+		String filename = "O:/Kinder films/G-Force (2009)/VIDEO_TS";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("dvd", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(576, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+	
+	@Test
+	void testDVD_4() {
+		//DVD video + audio
+		String filename = "O:/Kinder films/G-Force (2009)";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("dvd", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(576, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+	
+	@Test
+	void testISO_1() {
+		//ISO not zip
+		String filename = "O:/downloads/Hotel Transylvania 3 Summer Vacation (2018)/Hotel Transylvania 3 Summer Vacation (2018).iso";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("iso", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(480, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(0, mediaInfo.getAudioChannels());
+			Assertions.assertEquals(null, mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+
+	@Test
+	void testISO_2() {
+		//ISO zip readable
+		String filename = "O:/Kinder films/Early Man (2018)/Early Man (2018).iso";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("iso", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(576, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
 
 }

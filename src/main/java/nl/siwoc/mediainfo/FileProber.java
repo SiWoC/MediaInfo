@@ -11,6 +11,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import nl.siwoc.mediainfo.dvd.DVDUtils;
 import nl.siwoc.mediainfo.mkv.MKVUtils;
 import nl.siwoc.mediainfo.qtff.QTFFUtils;
 import nl.siwoc.mediainfo.riff.RIFFUtils;
@@ -50,6 +51,11 @@ public class FileProber {
 	}
 	public MediaInfo getMediaInfo(String filename) {
 		try {
+			return DVDUtils.parse(filename);
+		} catch (Exception e) {
+			LOGGER.log(Level.INFO, e.getMessage());
+		}
+		try {
 			return RIFFUtils.parse(filename);
 		} catch (Exception e) {
 			LOGGER.log(Level.INFO, e.getMessage());
@@ -64,7 +70,7 @@ public class FileProber {
 		} catch (Exception e) {
 			LOGGER.log(Level.INFO, e.getMessage());
 		}
-
+		/*
 		try (FileInputStream fis = new FileInputStream(filename)){
 			System.out.println(new File(filename).length());
 			byte[] b = new byte[10000];
@@ -78,6 +84,7 @@ public class FileProber {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		return null;
 
 	}
