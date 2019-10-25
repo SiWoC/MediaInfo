@@ -1,6 +1,8 @@
 package nl.siwoc.mediainfo.dvd;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 import nl.siwoc.mediainfo.MediaInfo;
@@ -9,6 +11,7 @@ public class DVDFile implements MediaInfo {
 
 	private static final Logger LOGGER = Logger.getLogger(DVDFile.class.getName());
 	
+	private String container;
 	private String videoCodec;
 	private String standard;
 	private String aspect;
@@ -62,126 +65,149 @@ public class DVDFile implements MediaInfo {
 		this.audioChannels = audioChannels;
 	}
 
-	public DVDFile (String filename) throws Exception {
+	public static DVDFile parseFromFile(String filename) throws Exception {
 		LOGGER.info("Start parsing file: " + filename);
 		try (FileInputStream fis = new FileInputStream(filename)) {
+			return parseFromStream(fis);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public static DVDFile parseFromStream(InputStream is) throws Exception {
+		DVDFile dvd = new DVDFile();
+		try {
 			byte[] type = new byte[12];
-			fis.read(type);
+			is.read(type);
 			if (!new String(type, "ASCII").matches("DVDVIDEO-VMG|DVDVIDEO-VTS")) {
 				throw new Exception("Invalid DVDFile, could not find DVDVIDEO-VMG or DVDVIDEO-VTS");
 			}
+			dvd.setContainer("dvd");
 			// skipping to offset 0x0200 videoattributes
-			fis.skip(500);
+			is.skip(500);
 			// videoattributes: Coding mode, Standard, Aspect, Automatic Pan/Scan, Automatic Letterbox
-			int attributes = fis.read();
+			int attributes = is.read();
 			switch (DVDUtils.getTwoBits(attributes, 6)) {
 				case 0: 
-					setVideoCodec("mpeg1");
+					dvd.setVideoCodec("mpeg1");
 					break;
 				case 1:
-					setVideoCodec("mpeg2");
+					dvd.setVideoCodec("mpeg2");
 					break;
 			}
 			switch (DVDUtils.getTwoBits(attributes, 4)) {
 				case 0: 
-					setStandard("NTSC");
+					dvd.setStandard("NTSC");
 					break;
 				case 1:
-					setStandard("PAL");
+					dvd.setStandard("PAL");
 					break;
 			}
 			switch (DVDUtils.getTwoBits(attributes, 2)) {
 				case 0: 
-					setAspect("4:3");
+					dvd.setAspect("4:3");
 					break;
 				case 1: case 2:
-					setAspect("reserved");
+					dvd.setAspect("reserved");
 					break;
 				case 3:
-					setAspect("16:9");
+					dvd.setAspect("16:9");
 					break;
 			}
 			// videoattributes: CC for line 21, Resolution, Letterboxed, camera/film
-			attributes = fis.read();
+			attributes = is.read();
 			switch (DVDUtils.getThreeBits(attributes, 3)) {
 			case 0: 
-				setFrameWidth(720);
-				if ("NTSC".equals(getStandard())) {
-					setFrameHeight(480);
+				dvd.setFrameWidth(720);
+				if ("NTSC".equals(dvd.getStandard())) {
+					dvd.setFrameHeight(480);
 				} else {
-					setFrameHeight(576);
+					dvd.setFrameHeight(576);
 				}
 				break;
 			case 1:
-				setFrameWidth(704);
-				if ("NTSC".equals(getStandard())) {
-					setFrameHeight(480);
+				dvd.setFrameWidth(704);
+				if ("NTSC".equals(dvd.getStandard())) {
+					dvd.setFrameHeight(480);
 				} else {
-					setFrameHeight(576);
+					dvd.setFrameHeight(576);
 				}
 				break;
 			case 2:
-				setFrameWidth(352);
-				if ("NTSC".equals(getStandard())) {
-					setFrameHeight(480);
+				dvd.setFrameWidth(352);
+				if ("NTSC".equals(dvd.getStandard())) {
+					dvd.setFrameHeight(480);
 				} else {
-					setFrameHeight(576);
+					dvd.setFrameHeight(576);
 				}
 				break;
 			case 3:
-				setFrameWidth(352);
-				if ("NTSC".equals(getStandard())) {
-					setFrameHeight(240);
+				dvd.setFrameWidth(352);
+				if ("NTSC".equals(dvd.getStandard())) {
+					dvd.setFrameHeight(240);
 				} else {
-					setFrameHeight(288);
+					dvd.setFrameHeight(288);
 				}
 				break;
 			}
 			// number of audio streams
-			setNumberOfAudioStreams(DVDUtils.readShortBE(fis));
-			if (getNumberOfAudioStreams() > 0) {
+			dvd.setNumberOfAudioStreams(DVDUtils.readShortBE(is));
+			if (dvd.getNumberOfAudioStreams() > 0) {
 				// audioattributes: Coding mode,, Multichannel extension present, Language type, Application mode
-				attributes = fis.read();
+				attributes = is.read();
 				switch (DVDUtils.getThreeBits(attributes, 5)) {
 					case 0: 
-						setAudioCodec("ac3");
+						dvd.setAudioCodec("ac3");
 						break;
 					case 1:
-						setAudioCodec("nn3");
+						dvd.setAudioCodec("nn3");
 						break;
 					case 2:
-						setAudioCodec("mpeg1");
+						dvd.setAudioCodec("mpeg1");
 						break;
 					case 3:
-						setAudioCodec("mpeg2");
+						dvd.setAudioCodec("mpeg2");
 						break;
 					case 4:
-						setAudioCodec("lpcm");
+						dvd.setAudioCodec("lpcm");
 						break;
 					case 5:
-						setAudioCodec("nn5");
+						dvd.setAudioCodec("nn5");
 						break;
 					case 6:
-						setAudioCodec("dts");
+						dvd.setAudioCodec("dts");
 						break;
 					case 7:
-						setAudioCodec("nn7");
+						dvd.setAudioCodec("nn7");
 						break;
 				}
 				// audioattributes: Quantization/DRC, Sample rate, AudioChannels
-				attributes = fis.read();
-				setAudioChannels((short) (DVDUtils.getThreeBits(attributes, 0) + 1));
+				attributes = is.read();
+				dvd.setAudioChannels((short) (DVDUtils.getThreeBits(attributes, 0) + 1));
 			}
-			LOGGER.info(toString());
+			LOGGER.info(dvd.toString());
+			return dvd;
 		} catch (Exception e) {
 			throw e;
 		}
+	}
 
+	public static DVDFile parseFromByteArray(byte[] vtsFileData) throws Exception {
+		try (ByteArrayInputStream bis = new ByteArrayInputStream(vtsFileData)) {
+			return parseFromStream(bis);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 	@Override
 	public String getContainer() {
-		return "dvd";
+		return container;
+	}
+
+	public void setContainer(String container) {
+		this.container = container;
+		
 	}
 
 	@Override
@@ -220,4 +246,5 @@ public class DVDFile implements MediaInfo {
 				", audioChannels: " + getAudioChannels() +
 				" }";
 	}
+
 }

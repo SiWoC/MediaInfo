@@ -24,7 +24,7 @@ public class DVDUtils {
 		System.out.println(file.getName());
 		if (file.getName().matches("VTS_\\d\\d_0.IFO")) {
 			System.out.println("Found DVD-file at: " + file.getAbsolutePath());
-			return new DVDFile(file.getAbsolutePath());
+			return DVDFile.parseFromFile(file.getAbsolutePath());
 		} else if (file.isDirectory() && file.getName().equals("VIDEO_TS")) {
 			return parseVTS(file);
 		} else if (file.isDirectory()) {
@@ -47,7 +47,7 @@ public class DVDUtils {
 		});
 		for (File file : vtsFiles) {
 			if (file.isFile()) {
-				dvdFile = new DVDFile(file.getAbsolutePath());
+				dvdFile = DVDFile.parseFromFile(file.getAbsolutePath());
 				if (dvdFile.getNumberOfAudioStreams() > 0) {
 					return dvdFile;
 				}

@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import nl.siwoc.mediainfo.dvd.DVDUtils;
+import nl.siwoc.mediainfo.iso.ISOUtils;
 import nl.siwoc.mediainfo.mkv.MKVUtils;
 import nl.siwoc.mediainfo.qtff.QTFFUtils;
 import nl.siwoc.mediainfo.riff.RIFFUtils;
@@ -34,7 +35,13 @@ public class FileProber {
 		//String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
 		//String filename = "O:/Series/Red Dwarf/S01/Red Dwarf S01E01 - The End.avi";
 		//String filename = "O:/downloads/Aladdin (1992)/Aladdin (1992).mkv";
-		String filename = "O:\\downloads\\The Throwaways (2015)\\Vectronic Presents _ The Throwaways (2015) 720p.WEB-DL.AC3_x264. NL Subs Ingebakken\\The Throwaways (2015) 720p.WEB-DL.AC3_x264.avi";
+		//String filename = "O:\\downloads\\The Throwaways (2015)\\Vectronic Presents _ The Throwaways (2015) 720p.WEB-DL.AC3_x264. NL Subs Ingebakken\\The Throwaways (2015) 720p.WEB-DL.AC3_x264.avi";
+		//ISO DVD not zip
+		String filename = "O:/Kinder films/Early Man (2018)/Early Man (2018).iso";
+		//ISO BR with zip
+		//String filename = "O:/Kinder films/The Pirates Band of Misfits (2012)/The Pirates Band of Misfits (2012) 3D.iso";
+		//ISO BR not zip
+		//String filename = "O:/downloads/Hotel Transylvania 3 Summer Vacation (2018)/Hotel Transylvania 3 Summer Vacation (2018).iso";
 		FileProber fp = new FileProber();
 		FileProber.setLogLevel(Level.FINER);
 		MediaInfo mediaInfo = fp.getMediaInfo(filename);
@@ -71,12 +78,20 @@ public class FileProber {
 			LOGGER.log(Level.INFO, e.getMessage());
 		}
 		/*
+		try {
+			return ISOUtils.parse(filename);
+		} catch (Exception e) {
+			LOGGER.log(Level.INFO, e.getMessage());
+		}
+		*/
+		
 		try (FileInputStream fis = new FileInputStream(filename)){
 			System.out.println(new File(filename).length());
-			byte[] b = new byte[10000];
+			byte[] b = new byte[500000];
+			fis.skip(32768);
 			fis.read(b);
 			fis.close();
-			FileOutputStream fos = new FileOutputStream("log/mediafilenew.txt");
+			FileOutputStream fos = new FileOutputStream("c:/temp/mediainfo/dvdiso16+.txt");
 			fos.write(b);
 			fos.close();
 			//System.out.println(new String(b, "ASCII"));
@@ -84,7 +99,7 @@ public class FileProber {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
+		
 		return null;
 
 	}

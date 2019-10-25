@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 
 import nl.siwoc.mediainfo.FileProber;
@@ -212,33 +213,50 @@ class FileProberTests {
 	
 	@Test
 	void testISO_1() {
-		//ISO not zip
-		String filename = "O:/downloads/Hotel Transylvania 3 Summer Vacation (2018)/Hotel Transylvania 3 Summer Vacation (2018).iso";
-		MediaInfo mediaInfo = fp.getMediaInfo(filename);
-		if (mediaInfo != null) {
-			Assertions.assertEquals("iso", mediaInfo.getContainer());
-			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
-			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
-			Assertions.assertEquals(480, mediaInfo.getFrameHeight());
-			Assertions.assertEquals(0, mediaInfo.getAudioChannels());
-			Assertions.assertEquals(null, mediaInfo.getAudioCodec());
-		} else {
-			Assertions.fail("No MediaInfo returned");
-		}
-	}
-
-	@Test
-	void testISO_2() {
 		//ISO zip readable
 		String filename = "O:/Kinder films/Early Man (2018)/Early Man (2018).iso";
 		MediaInfo mediaInfo = fp.getMediaInfo(filename);
 		if (mediaInfo != null) {
-			Assertions.assertEquals("iso", mediaInfo.getContainer());
+			Assertions.assertEquals("dvdiso", mediaInfo.getContainer());
 			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
 			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
 			Assertions.assertEquals(576, mediaInfo.getFrameHeight());
 			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
 			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+
+	@Ignore("ISOUtils parses the complete BR which takes forever")
+	void testISO_2() {
+		//ISO BR with zip
+		String filename = "O:/Kinder films/The Pirates Band of Misfits (2012)/The Pirates Band of Misfits (2012) 3D.iso";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("briso", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(576, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+
+	@Ignore("ISOUtils parses the complete BR which takes forever")
+	void testISO_3() {
+		//ISO BR not zip
+		String filename = "O:/downloads/Hotel Transylvania 3 Summer Vacation (2018)/Hotel Transylvania 3 Summer Vacation (2018).iso";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("briso", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(480, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(0, mediaInfo.getAudioChannels());
+			Assertions.assertEquals(null, mediaInfo.getAudioCodec());
 		} else {
 			Assertions.fail("No MediaInfo returned");
 		}

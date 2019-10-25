@@ -47,6 +47,8 @@ public class QTFFUtils {
 						fos.write(childData);
 						fos.close();
 						qtff.addChild(new MoovBox(qtff, atomSize, childData));
+					} else if (atomSize < 9) {
+						throw new Exception("Invalid atomSize: [" + atomSize + "], file is not QTFF/MOV/MP4");
 					} else {
 						fis.skip(atomSize - 8);
 					}
