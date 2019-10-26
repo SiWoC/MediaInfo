@@ -1,87 +1,75 @@
 package nl.siwoc.mediainfo.iso;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class ISO9660DiskImage {
-	private String isopath;
+
 	private ISO9660DiskImageFS rootFS;
 	private RandomAccessFile raf;
 	private static final int SECTORSIZE = 2048;
 
-	public ISO9660DiskImage(String isopath) throws Exception {
-		this.isopath = isopath;
-		raf = new RandomAccessFile(this.isopath, "r");
-		readSector(raf, 16);
+	public ISO9660DiskImageFS getRootFS() {
+		return rootFS;
 	}
 
-	public void readSector(RandomAccessFile raf, int nSector) throws Exception {
-			raf.seek(SECTORSIZE * nSector);
+	public void setRootFS(ISO9660DiskImageFS rootFS) {
+		this.rootFS = rootFS;
+	}
+
+	public RandomAccessFile getRaf() {
+		return raf;
+	}
+
+	public void setRaf(RandomAccessFile raf) {
+		this.raf = raf;
+	}
+
+	public ISO9660DiskImage(String isopath) throws Exception {
+		setRaf(new RandomAccessFile(isopath, "r"));
+		readSector(16);
+	}
+
+	public void readSector(int nSector) throws Exception {
+			getRaf().seek(SECTORSIZE * nSector);
 			byte[] sector = new byte[SECTORSIZE];
-			raf.read(sector);
+			getRaf().read(sector);
 			String header = getHeader(sector);
-			if (!"CD001".equals(header)
+			if (!"CD001".equals(header) //) {
 					&& !"BEA01".equals(header)) {
-				throw new Exception("Could not find DVD or BR header");
+				throw new Exception("Could not find DVD header, unsupported disk image");
 			}
 
-			this.rootFS = createRootFolder(this.raf, sector);
+			createRootFS(sector);
 	}
 			
 	private String getHeader(byte[] sector) {
 		return new String(Arrays.copyOfRange(sector, 1, 6));
 	}
 
-	private ISO9660DiskImageFS createRootFolder(RandomAccessFile raf,
-			byte[] data) {
-		int startSector = ISOUtils.readLittleEndianWord(Arrays.copyOfRange(
-				data, 158, 162));
-		int size = ISOUtils.readLittleEndianWord(Arrays.copyOfRange(data, 166,
-				170));
-		return new ISO9660DiskImageFS(startSector, size, "", true, raf);
-	}
-
-	private boolean isHeader(byte[] header) {
-		try {
-			return new String(header, "ASCII").equals("CD001");
-		} catch (UnsupportedEncodingException e) {
-			// never happens on ascii
-		}
-		return false;
-		/*
-		return (header[1] == 67) 
-			&& (header[2] == 68) 
-			&& (header[3] == 48)
-			&& (header[4] == 48)
-			&& (header[5] == 49);
-				*/
-	}
-
-	private boolean isPrimaryVolumeDescriptor(byte b) {
-		return 1 == ISOUtils.UValue(b);
+	private void createRootFS(byte[] data) throws Exception {
+		int startSector = ISOUtils.readIntLE(data, 158);
+		System.out.println(startSector);
+		int size = ISOUtils.readIntLE(data, 166);
+		System.out.println(size);
+		setRootFS(new ISO9660DiskImageFS(startSector, size, "", true, getRaf()));
 	}
 
 	public boolean existsFile(String filePath) {
-		return this.rootFS.existsFile(filePath);
+		return getRootFS().existsFile(filePath);
 	}
 
-	public byte[] getFile(String filePath) {
-		return this.rootFS.getFile(filePath);
+	public ISO9660DiskImageFS getFile(String filePath) throws IOException {
+		return getRootFS().getFile(filePath);
 	}
 
 	public void close() {
 		try {
-			this.raf.close();
+			getRaf().close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public HashMap<String, ISO9660DiskImageFS> getFiles(){
-		return (HashMap<String, ISO9660DiskImageFS>)rootFS.getFiles();
-	}
 }

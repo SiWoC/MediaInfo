@@ -15,15 +15,6 @@ import nl.siwoc.mediainfo.MediaInfo;
 
 class FileProberTests {
 
-	//ISO DVD5
-	//"O:/Kinder films/Coco (2017)/Coco (2017).iso"
-
-	//ISO DVD9
-	//"O:/Kinder films/De Lorax en het Verdwenen Bos (2012)/DR_SEUSS_THE_LORAX.iso"
-
-	//ISO BR
-	//"O:/downloads/Hotel Transylvania 3 Summer Vacation (2018)/Hotel Transylvania 3  Summer Vacation (2018).iso"
-
 	static FileProber fp;
 	
 	@BeforeAll
@@ -228,7 +219,7 @@ class FileProberTests {
 		}
 	}
 
-	@Ignore("ISOUtils parses the complete BR which takes forever")
+	@Test
 	void testISO_2() {
 		//ISO BR with zip
 		String filename = "O:/Kinder films/The Pirates Band of Misfits (2012)/The Pirates Band of Misfits (2012) 3D.iso";
@@ -245,7 +236,7 @@ class FileProberTests {
 		}
 	}
 
-	@Ignore("ISOUtils parses the complete BR which takes forever")
+	@Test
 	void testISO_3() {
 		//ISO BR not zip
 		String filename = "O:/downloads/Hotel Transylvania 3 Summer Vacation (2018)/Hotel Transylvania 3 Summer Vacation (2018).iso";
@@ -262,4 +253,40 @@ class FileProberTests {
 		}
 	}
 
+	@Test
+	void testISO_4() {
+		//ISO DVD5
+		String filename = "O:/Kinder films/Coco (2017)/Coco (2017).iso";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("dvdiso", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(576, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(2, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+	
+	@Test
+	void testISO_5() {
+		//ISO DVD9
+		String filename = "O:/Kinder films/De Lorax en het Verdwenen Bos (2012)/DR_SEUSS_THE_LORAX.iso";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("dvdiso", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(576, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+
+	// BluRay
+	// "O:/Films/Star Trek/Star Trek Beyond (2016)"
 }

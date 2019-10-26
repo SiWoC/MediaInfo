@@ -77,21 +77,19 @@ public class FileProber {
 		} catch (Exception e) {
 			LOGGER.log(Level.INFO, e.getMessage());
 		}
-		/*
 		try {
 			return ISOUtils.parse(filename);
 		} catch (Exception e) {
 			LOGGER.log(Level.INFO, e.getMessage());
 		}
-		*/
 		
 		try (FileInputStream fis = new FileInputStream(filename)){
 			System.out.println(new File(filename).length());
 			byte[] b = new byte[500000];
-			fis.skip(32768);
+			//fis.skip(32768); // 16 sectors of ISO9660 DiskImage
 			fis.read(b);
 			fis.close();
-			FileOutputStream fos = new FileOutputStream("c:/temp/mediainfo/dvdiso16+.txt");
+			FileOutputStream fos = new FileOutputStream("c:/temp/mediainfo/unknownfile.txt");
 			fos.write(b);
 			fos.close();
 			//System.out.println(new String(b, "ASCII"));

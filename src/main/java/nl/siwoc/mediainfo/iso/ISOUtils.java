@@ -2,6 +2,9 @@ package nl.siwoc.mediainfo.iso;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,25 +21,12 @@ public class ISOUtils {
 	public static MediaInfo parse(String filename) throws Exception {
 		LOGGER.info("Start parsing file: " + filename);
 		ISO9660DiskImage f = null;
-		DVDFile dvdFile = null;
 		try {
 			f = new ISO9660DiskImage(filename);
-			for (int i = 1 ; i < 100 ; i++) {
-				String vtsFilename = "VIDEO_TS" + System.getProperty("file.separator") + "VTS_" + String.format("%02d", i) + "_0.IFO";
-				LOGGER.info("Searching vts-file: " + vtsFilename);
-				byte[] vtsFileData = f.getFile(vtsFilename);
-				if (vtsFileData.length == 0) {
-					throw new Exception("No DVD ISO file [VTS_xx_0.IFO] found.");
-				}
-				dvdFile = DVDFile.parseFromByteArray(vtsFileData);
-				dvdFile.setContainer("dvdiso");
-				if (dvdFile.getNumberOfAudioStreams() > 0) {
-					return dvdFile;
-				}
-				LOGGER.info("vts-file: " + vtsFilename + " has no AudioStreams searching next IFO");
+			if (f.existsFile("VIDEO_TS")) {
+				return createDVD(f);
 			}
-			return dvdFile;
-			//throw new Exception("No DVD ISO file [VTS_xx_0.IFO] found.");
+			throw new Exception("Could not find VIDEO_TS-folder, unsupported disk image");
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -45,10 +35,32 @@ public class ISOUtils {
 			}
 		}
 	}
+	
+	public static MediaInfo createDVD(ISO9660DiskImage iso) throws Exception {
+		DVDFile dvdFile = null;
+		for (int i = 1 ; i < 100 ; i++) {
+			String vtsFilename = "VIDEO_TS" + System.getProperty("file.separator") + "VTS_" + String.format("%02d", i) + "_0.IFO";
+			LOGGER.info("Searching vts-file: " + vtsFilename);
+			ISO9660DiskImageFS vtsFile = iso.getFile(vtsFilename);
+			if (vtsFile == null) {
+				throw new Exception("No DVD ISO file [VTS_xx_0.IFO] found.");
+			}
+			byte[] vtsFileData = vtsFile.getData();
+			dvdFile = DVDFile.parseFromByteArray(vtsFileData);
+			dvdFile.setContainer("dvdiso");
+			if (dvdFile.getNumberOfAudioStreams() > 0) {
+				return dvdFile;
+			}
+			LOGGER.info("vts-file: " + vtsFilename + " has no AudioStreams searching next IFO");
+		}
+		return dvdFile;
+		//throw new Exception("No DVD ISO file [VTS_xx_0.IFO] found.");
+	}
 
 	public static void main (String args[]) throws Exception {
 		try {
 			new File("log").mkdir();
+			
 			FileHandler handler = new FileHandler("log/FileProber.log", 500000, 2, true);
 			handler.setFormatter(new SimpleFormatter());
 			Logger.getLogger("").addHandler(handler);
@@ -67,24 +79,20 @@ public class ISOUtils {
 
 	}	
 
-	public static int readLittleEndianWord(byte[] bytes) {
-		byte b1 = bytes[0];
-		byte b2 = bytes[1];
-		byte b3 = bytes[2];
-		byte b4 = bytes[3];
-		int s = 0;
-		s |= b4 & 0xFF;
-		s <<= 8;
-		s |= b3 & 0xFF;
-		s <<= 8;
-		s |= b2 & 0xFF;
-		s <<= 8;
-		s |= b1 & 0xFF;
-		return s;
+	public static int readIntLE(byte[] data, int offset) throws Exception {
+		if (data.length < offset + 4) throw new Exception("data too short [" + data.length + "] for offset + 4 [" + offset + "], could not readIntLE");
+		byte[] bytes = Arrays.copyOfRange(data, offset, offset + 4);
+		return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).getInt();
 	}
 
-	public static short UValue(byte b) {
+	public static short getUnsignedValue(byte b) {
 		return (short) (b & 0xFF);
 	}
+
+	public static int getSingleBit(int b, int position)
+	{
+	   return (b >> position) & 1;
+	}
+
 	
 }
