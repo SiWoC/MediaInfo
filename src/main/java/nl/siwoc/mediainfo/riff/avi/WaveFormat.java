@@ -120,7 +120,7 @@ public class WaveFormat extends StreamFormat {
 	}
 	
 	public String getHandler() {
-		return "NNWV";
+		return "ac3";
 	}
 
 }

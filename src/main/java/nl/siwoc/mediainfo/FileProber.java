@@ -32,12 +32,12 @@ public class FileProber {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
+		String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
 		//String filename = "O:/Series/Red Dwarf/S01/Red Dwarf S01E01 - The End.avi";
 		//String filename = "O:/downloads/Aladdin (1992)/Aladdin (1992).mkv";
 		//String filename = "O:\\downloads\\The Throwaways (2015)\\Vectronic Presents _ The Throwaways (2015) 720p.WEB-DL.AC3_x264. NL Subs Ingebakken\\The Throwaways (2015) 720p.WEB-DL.AC3_x264.avi";
 		//ISO DVD not zip
-		String filename = "O:/Kinder films/Early Man (2018)/Early Man (2018).iso";
+		//String filename = "O:/Kinder films/Early Man (2018)/Early Man (2018).iso";
 		//ISO BR with zip
 		//String filename = "O:/Kinder films/The Pirates Band of Misfits (2012)/The Pirates Band of Misfits (2012) 3D.iso";
 		//ISO BR not zip
@@ -56,6 +56,7 @@ public class FileProber {
 					);
 		}
 	}
+	
 	public MediaInfo getMediaInfo(String filename) {
 		try {
 			return DVDUtils.parse(filename);

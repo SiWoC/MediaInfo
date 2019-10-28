@@ -64,7 +64,7 @@ public class MKVFile extends MatroskaFile implements MediaInfo {
 	@Override
 	public int getFrameWidth() {
 		if (getVideoTrack() != null) {
-			return getVideoTrack().getVideo().getDisplayWidth();
+			return getVideoTrack().getVideo().getPixelWidth();
 		}
 		return 0;
 	}
@@ -72,7 +72,7 @@ public class MKVFile extends MatroskaFile implements MediaInfo {
 	@Override
 	public int getFrameHeight() {
 		if (getVideoTrack() != null) {
-			return getVideoTrack().getVideo().getDisplayHeight();
+			return getVideoTrack().getVideo().getPixelHeight();
 		}
 		return 0;
 	}

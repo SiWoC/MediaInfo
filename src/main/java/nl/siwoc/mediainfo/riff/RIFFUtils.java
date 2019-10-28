@@ -1,11 +1,17 @@
 package nl.siwoc.mediainfo.riff;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
+import nl.siwoc.mediainfo.FileProber;
 import nl.siwoc.mediainfo.MediaInfo;
 import nl.siwoc.mediainfo.riff.avi.AVIRIFF;
 
@@ -51,5 +57,28 @@ public class RIFFUtils {
 		return new String(bytes, "ASCII");
 	}
 
+	public static void main (String[] args) throws Exception {
+		try {
+			new File("log").mkdir();
+			
+			FileHandler handler = new FileHandler("log/FileProber.log", 500000, 2, true);
+			handler.setFormatter(new SimpleFormatter());
+			Logger.getLogger("").addHandler(handler);
+			FileProber.setLogLevel(Level.FINER);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
+		MediaInfo mediaInfo = RIFFUtils.parse(filename);
+		System.out.println(mediaInfo.getContainer());
+		System.out.println(mediaInfo.getVideoCodec());
+		System.out.println(mediaInfo.getFrameWidth());
+		System.out.println(mediaInfo.getFrameHeight());
+		System.out.println(mediaInfo.getAudioCodec());
+		System.out.println(mediaInfo.getAudioChannels());
+	}
 	
 }

@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 
 import nl.siwoc.mediainfo.FileProber;
@@ -42,7 +41,7 @@ class FileProberTests {
 		if (mediaInfo != null) {
 			Assertions.assertEquals("mkv", mediaInfo.getContainer());
 			Assertions.assertEquals("mpeg4", mediaInfo.getVideoCodec());
-			Assertions.assertEquals(1920, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(1904, mediaInfo.getFrameWidth());
 			Assertions.assertEquals(1080, mediaInfo.getFrameHeight());
 			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
 			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
@@ -67,7 +66,24 @@ class FileProberTests {
 			Assertions.fail("No MediaInfo returned");
 		}
 	}
-
+	
+	@Test
+	void testMKV_3() {
+		//MKV
+		String filename = "O:/downloads/Wallace and Gromit - A Matter of Loaf and Death (2008)/Wallace and Gromit - A Matter of Loaf and Death (2008).mkv";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("mkv", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg4", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(1920, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(1080, mediaInfo.getFrameHeight());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+	
 	@Test
 	void testAVI_1() {
 		String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
@@ -77,7 +93,7 @@ class FileProberTests {
 			Assertions.assertEquals("h264", mediaInfo.getVideoCodec());
 			Assertions.assertEquals(1280, mediaInfo.getFrameWidth());
 			Assertions.assertEquals(536, mediaInfo.getFrameHeight());
-			Assertions.assertEquals("nnwv", mediaInfo.getAudioCodec());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
 			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
 		} else {
 			Assertions.fail("No MediaInfo returned");
@@ -93,8 +109,8 @@ class FileProberTests {
 			Assertions.assertEquals("xvid", mediaInfo.getVideoCodec());
 			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
 			Assertions.assertEquals(416, mediaInfo.getFrameHeight());
-			Assertions.assertEquals("mp3", mediaInfo.getAudioCodec());
 			Assertions.assertEquals(2, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("mp3", mediaInfo.getAudioCodec());
 		} else {
 			Assertions.fail("No MediaInfo returned");
 		}
