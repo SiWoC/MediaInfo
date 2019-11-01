@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2019 Niek Knijnenburg
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package nl.siwoc.mediainfo;
 
 import java.io.File;
@@ -85,15 +101,14 @@ public class FileProber {
 		}
 		
 		try (FileInputStream fis = new FileInputStream(filename)){
-			System.out.println(new File(filename).length());
+			LOGGER.finer("Unknown filetype of length: " + new File(filename).length());
 			byte[] b = new byte[500000];
 			//fis.skip(32768); // 16 sectors of ISO9660 DiskImage
 			fis.read(b);
 			fis.close();
-			FileOutputStream fos = new FileOutputStream("c:/temp/mediainfo/unknownfile.txt");
+			FileOutputStream fos = new FileOutputStream("log/unknownfile.txt");
 			fos.write(b);
 			fos.close();
-			//System.out.println(new String(b, "ASCII"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
