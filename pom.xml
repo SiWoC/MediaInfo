@@ -1,18 +1,25 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>nl.siwoc.mediainfo</groupId>
-  <artifactId>MediaInfo</artifactId>
-  <version>0.8</version>
-  <name>MediaInfo</name>
-  <description>File parser to collect media info</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>nl.siwoc.mediainfo</groupId>
+	<artifactId>MediaInfo</artifactId>
+	<version>1.0</version>
+	<name>MediaInfo</name>
+	<description>File parser to collect media info</description>
 
-  <dependencies>
-  	<dependency>
-  		<groupId>org.ebml</groupId>
-  		<artifactId>jebml</artifactId>
-  		<version>2.2</version>
-  	</dependency>
-  </dependencies>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.copyright>Copyright (c) 2019</project.copyright>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.ebml</groupId>
+			<artifactId>jebml</artifactId>
+			<version>2.2</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 
