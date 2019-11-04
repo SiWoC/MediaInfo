@@ -63,7 +63,7 @@ public class QTFFUtils {
 						fos.write(childData);
 						fos.close();
 						qtff.addChild(new MoovBox(qtff, atomSize, childData));
-					} else if (atomSize < 9) {
+					} else if (atomSize < 8) {
 						throw new Exception("Invalid atomSize: [" + atomSize + "], file is not QTFF/MOV/MP4");
 					} else {
 						fis.skip(atomSize - 8);
@@ -125,6 +125,7 @@ public class QTFFUtils {
 		return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getShort();
 	}
 	
+	
 	public static void main (String args[]) throws Exception {
 		try {
 			new File("log").mkdir();
@@ -137,8 +138,9 @@ public class QTFFUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		String filename = "O:/Kinder films/Free Birds (2013)/Free Birds.mp4";
+		//String filename = "O:/Kinder films/Free Birds (2013)/Free Birds.mp4";
 		//String filename = "N:/Casper/huiswerk/Film NL/Dood.MOV";
+		String filename = "O:/Films/Glass (2019)/Glass (2019).mp4";
 		MediaInfo mp4 = QTFFUtils.parse(filename);
 		System.out.println(mp4.getContainer());
 		System.out.println(mp4.getVideoCodec());

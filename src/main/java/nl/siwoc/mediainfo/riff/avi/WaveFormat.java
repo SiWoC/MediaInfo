@@ -103,6 +103,9 @@ public class WaveFormat extends StreamFormat {
 			case WaveFormatTag.WAVE_FORMAT_EXTENSIBLE: {
 				return new WaveFormatExtensible(wf);
 			}
+			case WaveFormatTag.WAVE_FORMAT_DVM: {
+				return new WaveFormatDVM(wf);
+			}
 			default: {
 				LOGGER.severe("Unsupported formatTag=" + Integer.toHexString(wf.getFormatTag() & 0xffff));
 				return wf;

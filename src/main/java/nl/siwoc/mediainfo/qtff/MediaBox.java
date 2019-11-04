@@ -41,10 +41,10 @@ public class MediaBox implements MediaInfo{
 		String majorBrand = ((FtypBox) qtff.getChild("ftyp")).getMajorBrand();
 		if (majorBrand.matches("qt|mov")) {
 			return "mov";
-		} else if (majorBrand.matches("mpg4|mp41|mp42|mp43")) {
+		} else if (majorBrand.matches("isom|mpg4|mp41|mp42|mp43")) {
 			return "mp4";
 		}
-		return null;
+		return majorBrand.trim();
 	}
 
 	@Override
