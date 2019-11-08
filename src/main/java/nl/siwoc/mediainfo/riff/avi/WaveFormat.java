@@ -21,14 +21,14 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import nl.siwoc.mediainfo.riff.RIFFUtils;
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class WaveFormat extends StreamFormat {
 
 	private static final Logger LOGGER = Logger.getLogger(WaveFormat.class.getName());
 	
 	private short formatTag;
-	private short channels; 
+	private int channels; 
 	private int samplesPerSecond; 
 	private int averageBytesPerSecond; 
 	private short blockAlign; 
@@ -43,11 +43,11 @@ public class WaveFormat extends StreamFormat {
 		this.formatTag = formatTag;
 	}
 
-	public short getChannels() {
+	public int getChannels() {
 		return channels;
 	}
 
-	public void setChannels(short channels) {
+	public void setChannels(int channels) {
 		this.channels = channels;
 	}
 
@@ -117,13 +117,13 @@ public class WaveFormat extends StreamFormat {
 	
 	public WaveFormat(int size, byte[] data) throws Exception {
 		try (InputStream is = new ByteArrayInputStream(data)){
-			setFormatTag(RIFFUtils.readShortLE(is));
-			setChannels(RIFFUtils.readShortLE(is)); 
-			setSamplesPerSecond(RIFFUtils.readIntLE(is)); 
-			setAverageBytesPerSecond(RIFFUtils.readIntLE(is)); 
-			setBlockAlign(RIFFUtils.readShortLE(is)); 
-			setBitsPerSample(RIFFUtils.readShortLE(is)); 
-			setExtraInfoSize(RIFFUtils.readShortLE(is)); 	
+			setFormatTag(ReadUtils.readInt16LE(is));
+			setChannels(ReadUtils.readInt16LE(is)); 
+			setSamplesPerSecond(ReadUtils.readInt32LE(is)); 
+			setAverageBytesPerSecond(ReadUtils.readInt32LE(is)); 
+			setBlockAlign(ReadUtils.readInt16LE(is)); 
+			setBitsPerSample(ReadUtils.readInt16LE(is)); 
+			setExtraInfoSize(ReadUtils.readInt16LE(is)); 	
 			LOGGER.log(Level.FINE,"WaveFormat" + System.lineSeparator() +
 				"  formatTag=" + Integer.toHexString(getFormatTag() & 0xffff) + System.lineSeparator() +
 				"  channels=" + getChannels() + System.lineSeparator() +

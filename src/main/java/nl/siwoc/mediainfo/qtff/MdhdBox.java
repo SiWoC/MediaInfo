@@ -18,64 +18,67 @@ package nl.siwoc.mediainfo.qtff;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
+
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class MdhdBox extends FullBox {
 
-    private long creationTime;
-    private long modificationTime;
-    private int timescale;
-    private long duration;
+    private BigDecimal creationTime;
+    private BigDecimal modificationTime;
+    private long timescale;
+    private BigDecimal duration;
 
-    public long getCreationTime() {
+    public BigDecimal getCreationTime() {
 		return creationTime;
 	}
 
-	public void setCreationTime(long creationTime) {
+	public void setCreationTime(BigDecimal creationTime) {
 		this.creationTime = creationTime;
 	}
 
-	public long getModificationTime() {
+	public BigDecimal getModificationTime() {
 		return modificationTime;
 	}
 
-	public void setModificationTime(long modificationTime) {
+	public void setModificationTime(BigDecimal modificationTime) {
 		this.modificationTime = modificationTime;
 	}
 
-	public int getTimescale() {
+	public long getTimescale() {
 		return timescale;
 	}
 
-	public void setTimescale(int timescale) {
+	public void setTimescale(long timescale) {
 		this.timescale = timescale;
 	}
 
-	public long getDuration() {
+	public BigDecimal getDuration() {
 		return duration;
 	}
 
-	public void setDuration(long duration) {
+	public void setDuration(BigDecimal duration) {
 		this.duration = duration;
 	}
 
-	public MdhdBox(Box parent, int size, byte[] data) throws Exception {
+	public MdhdBox(Box parent, long size, byte[] data) throws Exception {
 		setType("mdhd");
 		setSize(size);
 		setParent(parent);
 		LOGGER.info("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());
-	        setFlag(QTFFUtils.readFlag(is));
+	        setFlag(ReadUtils.readFlag(is));
 	        if (getVersion() == 1) {
-	        	setCreationTime(QTFFUtils.readWideBE(is));
-	        	setModificationTime(QTFFUtils.readWideBE(is));
-	        	setTimescale(QTFFUtils.readIntBE(is));
-	        	setDuration(QTFFUtils.readWideBE(is));
+	        	setCreationTime(ReadUtils.readUInt64BE(is));
+	        	setModificationTime(ReadUtils.readUInt64BE(is));
+	        	setTimescale(ReadUtils.readUInt32BE(is));
+	        	setDuration(ReadUtils.readUInt64BE(is));
 	        } else {
-	        	setCreationTime(QTFFUtils.readIntBE(is));
-	        	setModificationTime(QTFFUtils.readIntBE(is));
-	        	setTimescale(QTFFUtils.readIntBE(is));
-	        	setDuration(QTFFUtils.readIntBE(is));
+	        	setCreationTime(new BigDecimal(ReadUtils.readUInt32BE(is)));
+	        	setModificationTime(new BigDecimal(ReadUtils.readUInt32BE(is)));
+	        	setTimescale(ReadUtils.readUInt32BE(is));
+	        	setDuration(new BigDecimal(ReadUtils.readUInt32BE(is)));
 	        }
 	        LOGGER.info(toString());
 	        // don't need rest at this moment

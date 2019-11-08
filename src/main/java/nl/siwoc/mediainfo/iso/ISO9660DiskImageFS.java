@@ -21,6 +21,8 @@ import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import nl.siwoc.mediainfo.utils.ReadUtils;
+
 /* 
  * based on https://github.com/zevektor/DiskImageReader/graphs/contributors
  * by Alessandro Mangone (Vektor) zevektor
@@ -118,10 +120,10 @@ public class ISO9660DiskImageFS {
 	}
 
 	private void parseFile(byte[] data) throws Exception {
-		int startSector = ISOUtils.readIntLE(data, 2);
-		int size = ISOUtils.readIntLE(data, 10);
-		boolean isDir = (ISOUtils.getSingleBit(data[25], 1) == 1);
-		int filenameLength = ISOUtils.getUnsignedValue(data[32]);
+		int startSector = ReadUtils.readInt32LE(data, 2);
+		int size = ReadUtils.readInt32LE(data, 10);
+		boolean isDir = (ReadUtils.getSingleBit(data[25], 1) == 1);
+		int filenameLength = ReadUtils.getUnsignedValue(data[32]);
 		String filename;
 		if (isDir) {
 			filename = new String(Arrays.copyOfRange(data, 33, 33 + filenameLength));

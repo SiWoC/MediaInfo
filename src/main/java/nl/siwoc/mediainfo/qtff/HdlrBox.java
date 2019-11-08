@@ -19,6 +19,8 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import nl.siwoc.mediainfo.utils.ReadUtils;
+
 public class HdlrBox extends FullBox {
 
     private String componentType;
@@ -40,16 +42,16 @@ public class HdlrBox extends FullBox {
 		this.handlerType = handlerType;
 	}
 
-	public HdlrBox(Box parent, int size, byte[] data) throws Exception {
+	public HdlrBox(Box parent, long size, byte[] data) throws Exception {
 		setType("hdlr");
 		setSize(size);
 		setParent(parent);
 		LOGGER.info("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());
-	        setFlag(QTFFUtils.readFlag(is));
-	        setComponentType(QTFFUtils.readFourCC(is));
-	        setHandlerType(QTFFUtils.readFourCC(is));
+	        setFlag(ReadUtils.readFlag(is));
+	        setComponentType(ReadUtils.readFourCC(is));
+	        setHandlerType(ReadUtils.readFourCC(is));
 	        if (getHandlerType().matches("vide|soun")) {
 		        TrakBox trak = (TrakBox)searchUp("trak");
 		        if (trak != null) {

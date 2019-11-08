@@ -19,28 +19,30 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import nl.siwoc.mediainfo.utils.ReadUtils;
+
 public class Avc1SampleEntry extends SampleEntry {
 	
-	private short width;
-	private short height;
+	private int width;
+	private int height;
 	
-	public short getWidth() {
+	public int getWidth() {
 		return width;
 	}
 
-	public void setWidth(short width) {
+	public void setWidth(int width) {
 		this.width = width;
 	}
 
-	public short getHeight() {
+	public int getHeight() {
 		return height;
 	}
 
-	public void setHeight(short height) {
+	public void setHeight(int height) {
 		this.height = height;
 	}
 
-	public Avc1SampleEntry(Box parent, int size, byte[] data) throws Exception {
+	public Avc1SampleEntry(Box parent, long size, byte[] data) throws Exception {
 		setType("avc1");
 		setSize(size);
 		setParent(parent);
@@ -52,17 +54,17 @@ public class Avc1SampleEntry extends SampleEntry {
 		try (InputStream is = new ByteArrayInputStream(data)){
 			// SampleEntry base
 			// skip 6
-			QTFFUtils.readIntBE(is);
-			QTFFUtils.readShortBE(is);
-			setDataReferenceIndex(QTFFUtils.readShortBE(is));
+			ReadUtils.readUInt32BE(is);
+			ReadUtils.readInt16BE(is);
+			setDataReferenceIndex(ReadUtils.readUInt16BE(is));
 			// VisualSampleEntry
 			// skip 16 (0)
-			QTFFUtils.readIntBE(is);
-			QTFFUtils.readIntBE(is);
-			QTFFUtils.readIntBE(is);
-			QTFFUtils.readIntBE(is);
-			setWidth(QTFFUtils.readShortBE(is));
-			setHeight(QTFFUtils.readShortBE(is));
+			ReadUtils.readUInt32BE(is);
+			ReadUtils.readUInt32BE(is);
+			ReadUtils.readUInt32BE(is);
+			ReadUtils.readUInt32BE(is);
+			setWidth(ReadUtils.readUInt16BE(is));
+			setHeight(ReadUtils.readUInt16BE(is));
 			if (trak != null) {
 				trak.setWidth(getWidth());
 				trak.setHeight(getHeight());

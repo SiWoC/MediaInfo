@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.siwoc.mediainfo.riff.ListChunk;
-import nl.siwoc.mediainfo.riff.RIFFUtils;
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class StreamList extends ListChunk {
 
@@ -55,20 +55,20 @@ public class StreamList extends ListChunk {
 			int childSize;
 			byte[] childData;
 			// expect strh
-			fourCC = RIFFUtils.readFourCC(is);
+			fourCC = ReadUtils.readFourCC(is);
 			if (!"strh".equals(fourCC)) {
 				throw new Exception("Invalid AVI StreamList, unable to find strh, found: " + fourCC);
 			}
-			childSize = RIFFUtils.readIntLE(is);
+			childSize = ReadUtils.readInt32LE(is);
 			childData = new byte[childSize];
 			is.read(childData);
 			setStrh(new StreamHeader(childSize, childData));
 			// strf
-			fourCC = RIFFUtils.readFourCC(is);
+			fourCC = ReadUtils.readFourCC(is);
 			if (!"strf".equals(fourCC)) {
 				throw new Exception("Invalid AVI StreamList, unable to find strf, found: " + fourCC);
 			}
-			childSize = RIFFUtils.readIntLE(is);
+			childSize = ReadUtils.readInt32LE(is);
 			LOGGER.log(Level.FINE,"strfSize: " + childSize);
 			childData = new byte[childSize];
 			is.read(childData);
@@ -92,7 +92,7 @@ public class StreamList extends ListChunk {
 		}
 	}
 
-	public short getChannels() {
+	public int getChannels() {
 		if ("auds".equals(getStrh().getType())) {
 			return getStrf().getChannels();
 		} else {

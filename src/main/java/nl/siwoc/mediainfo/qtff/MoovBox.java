@@ -18,7 +18,7 @@ package nl.siwoc.mediainfo.qtff;
 
 public class MoovBox extends Box {
 	
-    public MoovBox(Box parent, int size, byte[] data) throws Exception {
+    public MoovBox(Box parent, long size, byte[] data) throws Exception {
 		setType("moov");
 		setSize(size);
 		setParent(parent);

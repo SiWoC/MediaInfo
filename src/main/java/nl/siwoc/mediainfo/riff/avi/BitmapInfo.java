@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import nl.siwoc.mediainfo.riff.RIFFUtils;
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class BitmapInfo extends StreamFormat {
 
@@ -123,17 +123,17 @@ public class BitmapInfo extends StreamFormat {
 		setSize(size);
 		try (InputStream is = new ByteArrayInputStream(data)){
 			// read size again ?!?
-			RIFFUtils.readIntLE(is);
-			setWidth(RIFFUtils.readIntLE(is));
-			setHeight(RIFFUtils.readIntLE(is));
-			setPlanes(RIFFUtils.readShortLE(is));
-			setBitCount(RIFFUtils.readShortLE(is));
-			setCompression(RIFFUtils.readFourCC(is));
-			setSizeImage(RIFFUtils.readIntLE(is));
-			setxPixelsPerMeter(RIFFUtils.readIntLE(is));
-			setyPixelsPerMeter(RIFFUtils.readIntLE(is));
-			setNumberOfColorIndexesUsed(RIFFUtils.readIntLE(is));
-			setNumberOfColorIndexesImportant(RIFFUtils.readIntLE(is));
+			ReadUtils.readInt32LE(is);
+			setWidth(ReadUtils.readInt32LE(is));
+			setHeight(ReadUtils.readInt32LE(is));
+			setPlanes(ReadUtils.readInt16LE(is));
+			setBitCount(ReadUtils.readInt16LE(is));
+			setCompression(ReadUtils.readFourCC(is));
+			setSizeImage(ReadUtils.readInt32LE(is));
+			setxPixelsPerMeter(ReadUtils.readInt32LE(is));
+			setyPixelsPerMeter(ReadUtils.readInt32LE(is));
+			setNumberOfColorIndexesUsed(ReadUtils.readInt32LE(is));
+			setNumberOfColorIndexesImportant(ReadUtils.readInt32LE(is));
 
 			LOGGER.log(Level.FINE,"AVI BitmapInfo (strf): " + System.lineSeparator() +
 				"   size=" + size + System.lineSeparator() +
@@ -264,7 +264,7 @@ public class BitmapInfo extends StreamFormat {
 	}
 
 	@Override
-	protected short getChannels() {
+	protected int getChannels() {
 		return 0;
 	}
 

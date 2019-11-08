@@ -20,9 +20,9 @@ public class TrakBox extends Box {
 
     private String handlerType;
     private String codecId;
-	private short width;
-	private short height;
-	private short channelCount;
+	private int width;
+	private int height;
+	private int channelCount;
 	
     public String getHandlerType() {
 		return handlerType;
@@ -40,31 +40,31 @@ public class TrakBox extends Box {
 		this.codecId = codecId;
 	}
 
-	public short getWidth() {
+	public int getWidth() {
 		return width;
 	}
 
-	public void setWidth(short width) {
+	public void setWidth(int width) {
 		this.width = width;
 	}
 
-	public short getHeight() {
+	public int getHeight() {
 		return height;
 	}
 
-	public void setHeight(short height) {
+	public void setHeight(int height) {
 		this.height = height;
 	}
 
-	public short getChannelCount() {
+	public int getChannelCount() {
 		return channelCount;
 	}
 
-	public void setChannelCount(short channelCount) {
+	public void setChannelCount(int channelCount) {
 		this.channelCount = channelCount;
 	}
 
-	public TrakBox(Box parent, int size, byte[] data) throws Exception {
+	public TrakBox(Box parent, long size, byte[] data) throws Exception {
 		setType("trak");
 		setSize(size);
 		setParent(parent);

@@ -23,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.siwoc.mediainfo.riff.ListChunk;
-import nl.siwoc.mediainfo.riff.RIFFUtils;
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class HeaderList extends ListChunk {
 
@@ -72,25 +72,25 @@ public class HeaderList extends ListChunk {
 		try (InputStream is = new ByteArrayInputStream(data)){
 			String fourCC;
 			// expect avih
-			fourCC = RIFFUtils.readFourCC(is);
+			fourCC = ReadUtils.readFourCC(is);
 			if (!"avih".equals(fourCC)) {
 				throw new Exception("Invalid AVI HeaderList, should start with avih, found: " + fourCC);
 			}
 			// read and discard size = 56
-			int avihSize = RIFFUtils.readIntLE(is);
+			int avihSize = ReadUtils.readInt32LE(is);
 			byte[] avihBytes = new byte[avihSize];
 			is.read(avihBytes);
 			setAvih(new MainHeader(avihSize, avihBytes));
 			for (int i = 0 ; i < getAvih().getNumberOfStreams() ; i++) {
 				// expect LIST
-				fourCC = RIFFUtils.readFourCC(is);
+				fourCC = ReadUtils.readFourCC(is);
 				if (!"LIST".equals(fourCC)) {
 					throw new Exception("Invalid AVI HeaderList, unable to find header/streamlist LIST[" + i + "], found: " + fourCC);
 				}
-				int strlSize = RIFFUtils.readIntLE(is);
+				int strlSize = ReadUtils.readInt32LE(is);
 				LOGGER.log(Level.FINE,"strlSize: " + strlSize);
 				// expect strl
-				fourCC = RIFFUtils.readFourCC(is);
+				fourCC = ReadUtils.readFourCC(is);
 				if (!"strl".equals(fourCC)) {
 					throw new Exception("Invalid AVI HeaderList, unable to find header/streamlist strl[\" + i + \"], found: " + fourCC);
 				}

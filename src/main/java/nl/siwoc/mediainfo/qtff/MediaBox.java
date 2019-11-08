@@ -98,7 +98,7 @@ public class MediaBox implements MediaInfo{
 	}
 
 	@Override
-	public short getAudioChannels() {
+	public int getAudioChannels() {
 		ArrayList<Box> traks = qtff.getChild("moov").getChildren("trak");
 		for (Box box : traks) {
 			if (box instanceof TrakBox) {

@@ -21,6 +21,8 @@ import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import nl.siwoc.mediainfo.utils.ReadUtils;
+
 /* 
  * based on https://github.com/zevektor/DiskImageReader/graphs/contributors
  * by Alessandro Mangone (Vektor) zevektor
@@ -72,9 +74,9 @@ public class ISO9660DiskImage {
 	}
 
 	private void createRootFS(byte[] data) throws Exception {
-		int startSector = ISOUtils.readIntLE(data, 158);
+		int startSector = ReadUtils.readInt32LE(data, 158);
 		LOGGER.finer("StartSector: " + startSector);
-		int size = ISOUtils.readIntLE(data, 166);
+		int size = ReadUtils.readInt32LE(data, 166);
 		LOGGER.finer("Size: " + size);
 		setRootFS(new ISO9660DiskImageFS(startSector, size, "", true, getRaf()));
 	}

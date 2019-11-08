@@ -134,6 +134,23 @@ class FileProberTests {
 	}
 	
 	@Test
+	void testMP4_2() {
+		//MP4
+		String filename = "O:/Films/Glass (2019)/Glass (2019).mp4";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("mp4", mediaInfo.getContainer());
+			Assertions.assertEquals("isom", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(1280, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(720, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(2, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+	
+	@Test
 	void testMOV_1() {
 		//MP4
 		String filename = "N:/Casper/huiswerk/Film NL/Dood.MOV";

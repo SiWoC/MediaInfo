@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 import nl.siwoc.mediainfo.MediaInfo;
 import nl.siwoc.mediainfo.riff.RIFFChunk;
-import nl.siwoc.mediainfo.riff.RIFFUtils;
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class AVIRIFF extends RIFFChunk implements MediaInfo{
 
@@ -43,13 +43,13 @@ public class AVIRIFF extends RIFFChunk implements MediaInfo{
 		setSize(size);
 		setFileType(fileType);
 		String fourCC;
-		fourCC = RIFFUtils.readFourCC(is);
+		fourCC = ReadUtils.readFourCC(is);
 		if (!"LIST".equals(fourCC)) {
 			throw new Exception("Invalid AVI RIFF, unable to find headerlist LIST, found: " + fourCC);
 		}
-		int hdrlSize = RIFFUtils.readIntLE(is);
+		int hdrlSize = ReadUtils.readInt32LE(is);
 		LOGGER.log(Level.FINE,"hdrlSize: " + hdrlSize);
-		fourCC = RIFFUtils.readFourCC(is);
+		fourCC = ReadUtils.readFourCC(is);
 		if (!"hdrl".equals(fourCC)) {
 			throw new Exception("Invalid AVI RIFF, unable to find headerlist hdrl, found: " + fourCC);
 		}
@@ -106,7 +106,7 @@ public class AVIRIFF extends RIFFChunk implements MediaInfo{
 	}
 
 	@Override
-	public short getAudioChannels() {
+	public int getAudioChannels() {
 		if (getHdrl().getAudioStreams().size() > 0)
 			return getHdrl().getAudioStreams().get(0).getChannels();
 		else {

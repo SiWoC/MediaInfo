@@ -18,49 +18,52 @@ package nl.siwoc.mediainfo.qtff;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
+
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class TkhdBox extends FullBox {
 
-    private long creationTime;
-    private long modificationTime;
-    private int trackId;
-    private long duration;
+    private BigDecimal creationTime;
+    private BigDecimal modificationTime;
+    private long trackId;
+    private BigDecimal duration;
     private short layer;
     private short alternateGroup;
     private short volume;
     private int[] matrix = new int[9];
-    private int width;
-    private int height;    
+    private long width;
+    private long height;    
 
-    public long getCreationTime() {
+    public BigDecimal getCreationTime() {
 		return creationTime;
 	}
 
-	public void setCreationTime(long creationTime) {
+	public void setCreationTime(BigDecimal creationTime) {
 		this.creationTime = creationTime;
 	}
 
-	public long getModificationTime() {
+	public BigDecimal getModificationTime() {
 		return modificationTime;
 	}
 
-	public void setModificationTime(long modificationTime) {
+	public void setModificationTime(BigDecimal modificationTime) {
 		this.modificationTime = modificationTime;
 	}
 
-	public int getTrackId() {
+	public long getTrackId() {
 		return trackId;
 	}
 
-	public void setTrackId(int trackId) {
+	public void setTrackId(long trackId) {
 		this.trackId = trackId;
 	}
 
-	public long getDuration() {
+	public BigDecimal getDuration() {
 		return duration;
 	}
 
-	public void setDuration(long duration) {
+	public void setDuration(BigDecimal duration) {
 		this.duration = duration;
 	}
 
@@ -100,54 +103,54 @@ public class TkhdBox extends FullBox {
 		this.matrix[i] = k;
 	}
 
-	public int getWidth() {
+	public long getWidth() {
 		return width;
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(long width) {
 		this.width = width;
 	}
 
-	public int getHeight() {
+	public long getHeight() {
 		return height;
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(long height) {
 		this.height = height;
 	}
 
-	public TkhdBox(Box parent, int size, byte[] data) throws Exception {
+	public TkhdBox(Box parent, long size, byte[] data) throws Exception {
 		setType("tkhd");
 		setSize(size);
 		setParent(parent);
 		LOGGER.info("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());
-	        setFlag(QTFFUtils.readFlag(is));
+	        setFlag(ReadUtils.readFlag(is));
 	        if (getVersion() == 1) {
-	        	setCreationTime(QTFFUtils.readWideBE(is));
-	        	setModificationTime(QTFFUtils.readWideBE(is));
-	        	setTrackId(QTFFUtils.readIntBE(is));
-	        	QTFFUtils.readIntBE(is); //reserved
-	        	setDuration(QTFFUtils.readWideBE(is));
+	        	setCreationTime(ReadUtils.readUInt64BE(is));
+	        	setModificationTime(ReadUtils.readUInt64BE(is));
+	        	setTrackId(ReadUtils.readUInt32BE(is));
+	        	ReadUtils.readUInt32BE(is); //reserved
+	        	setDuration(ReadUtils.readUInt64BE(is));
 	        } else {
-	        	setCreationTime(QTFFUtils.readIntBE(is));
-	        	setModificationTime(QTFFUtils.readIntBE(is));
-	        	setTrackId(QTFFUtils.readIntBE(is));
-	        	QTFFUtils.readIntBE(is); //reserved
-	        	setDuration(QTFFUtils.readIntBE(is));
+	        	setCreationTime(new BigDecimal(ReadUtils.readUInt32BE(is)));
+	        	setModificationTime(new BigDecimal(ReadUtils.readUInt32BE(is)));
+	        	setTrackId(ReadUtils.readUInt32BE(is));
+	        	ReadUtils.readUInt32BE(is); //reserved
+	        	setDuration(new BigDecimal(ReadUtils.readUInt32BE(is)));
 	        }
-        	QTFFUtils.readIntBE(is); //reserved [0]
-        	QTFFUtils.readIntBE(is); //reserved [1]
-        	setLayer(QTFFUtils.readShortBE(is));
-        	setAlternateGroup(QTFFUtils.readShortBE(is));
-        	setVolume(QTFFUtils.readShortBE(is));
-        	QTFFUtils.readShortBE(is); // reserved
+        	ReadUtils.readUInt32BE(is); //reserved [0]
+        	ReadUtils.readUInt32BE(is); //reserved [1]
+        	setLayer(ReadUtils.readInt16BE(is));
+        	setAlternateGroup(ReadUtils.readInt16BE(is));
+        	setVolume(ReadUtils.readInt16BE(is));
+        	ReadUtils.readUInt16BE(is); // reserved
         	for (int i = 0 ; i < matrix.length ; i++) {
-        		setMatrix(i,QTFFUtils.readIntBE(is));
+        		setMatrix(i,ReadUtils.readInt32BE(is));
         	}
-        	setWidth(QTFFUtils.readIntBE(is));
-        	setHeight(QTFFUtils.readIntBE(is));
+        	setWidth(ReadUtils.readUInt32BE(is));
+        	setHeight(ReadUtils.readUInt32BE(is));
 	        LOGGER.info(toString());
 	        // don't need rest at this moment
 		} catch (Exception e){

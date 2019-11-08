@@ -18,51 +18,38 @@ package nl.siwoc.mediainfo.qtff;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class StsdBox extends FullBox {
 
-    private int entryCount;
-    private ArrayList<SampleEntry> sampleEntries = new ArrayList<SampleEntry>();
+    private long entryCount;
 
-	public int getEntryCount() {
+	public long getEntryCount() {
 		return entryCount;
 	}
 
-	public void setEntryCount(int entryCount) {
+	public void setEntryCount(long entryCount) {
 		this.entryCount = entryCount;
 	}
 
-	public ArrayList<SampleEntry> getSampleEntries() {
-		return sampleEntries;
-	}
-
-	public void setSampleEntries(ArrayList<SampleEntry> sampleEntries) {
-		this.sampleEntries = sampleEntries;
-	}
-	
-	public void addSampleEntry(SampleEntry entry) {
-		sampleEntries.add(entry);
-	}
-
-	public StsdBox(Box parent, int size, byte[] data) throws Exception {
+	public StsdBox(Box parent, long size, byte[] data) throws Exception {
 		setType("stsd");
 		setSize(size);
 		setParent(parent);
 		LOGGER.info("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());
-	        setFlag(QTFFUtils.readFlag(is));
-	        setEntryCount(QTFFUtils.readIntBE(is));
+	        setFlag(ReadUtils.readFlag(is));
+	        setEntryCount(ReadUtils.readUInt32BE(is));
 	        LOGGER.info(toString());
 	        //for (int i = 0 ; i < entryCount ; i++)
 	        // only reading 1 sample
 	        {
-	        	int entrySize = QTFFUtils.readIntBE(is);
-	        	String entryType = QTFFUtils.readFourCC(is);
-	        	byte[] entryData = new byte[entrySize - 8];
+	        	long entrySize = ReadUtils.readUInt32BE(is);
+	        	String entryType = ReadUtils.readFourCC(is);
+	        	byte[] entryData = new byte[(int) (entrySize - 8)];
 	        	is.read(entryData);
-	        	addSampleEntry(createSampleEntry(this, entrySize, entryType, entryData));
+	        	addChild(createSampleEntry(this, entrySize, entryType, entryData));
 	        }
 	        // don't need rest at this moment
 		} catch (Exception e){

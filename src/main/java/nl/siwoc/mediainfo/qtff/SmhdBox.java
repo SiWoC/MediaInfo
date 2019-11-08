@@ -19,16 +19,18 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import nl.siwoc.mediainfo.utils.ReadUtils;
+
 public class SmhdBox extends FullBox {
 
-	public SmhdBox(Box parent, int size, byte[] data) throws Exception {
+	public SmhdBox(Box parent, long size, byte[] data) throws Exception {
 		setType("smhd");
 		setSize(size);
 		setParent(parent);
 		LOGGER.info("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());
-	        setFlag(QTFFUtils.readFlag(is));
+	        setFlag(ReadUtils.readFlag(is));
 	        LOGGER.info(toString());
 	        // don't need rest at this moment
 		} catch (Exception e){

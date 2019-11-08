@@ -18,9 +18,6 @@ package nl.siwoc.mediainfo.iso;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,21 +90,6 @@ public class ISOUtils {
 		System.out.println(iso.getContainer());
 		System.out.println(iso.getVideoCodec());
 
-	}	
-
-	public static int readIntLE(byte[] data, int offset) throws Exception {
-		if (data.length < offset + 4) throw new Exception("data too short [" + data.length + "] for offset + 4 [" + offset + "], could not readIntLE");
-		byte[] bytes = Arrays.copyOfRange(data, offset, offset + 4);
-		return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).getInt();
-	}
-
-	public static short getUnsignedValue(byte b) {
-		return (short) (b & 0xFF);
-	}
-
-	public static int getSingleBit(int b, int position)
-	{
-	   return (b >> position) & 1;
 	}
 
 	

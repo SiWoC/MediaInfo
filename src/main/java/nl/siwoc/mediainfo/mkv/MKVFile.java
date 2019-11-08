@@ -102,7 +102,7 @@ public class MKVFile extends MatroskaFile implements MediaInfo {
 	}
 
 	@Override
-	public short getAudioChannels() {
+	public int getAudioChannels() {
 		if (getAudioTrack() != null) {
 			return getAudioTrack().getAudio().getChannels();
 		}

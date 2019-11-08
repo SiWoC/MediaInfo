@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 import nl.siwoc.mediainfo.MediaInfo;
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class DVDFile implements MediaInfo {
 
@@ -35,7 +36,7 @@ public class DVDFile implements MediaInfo {
 	private int frameHeight;
 	private short numberOfAudioStreams;
 	private String audioCodec;
-	private short audioChannels;
+	private int audioChannels;
 
 	public void setVideoCodec(String videoCodec) {
 		this.videoCodec = videoCodec;
@@ -77,7 +78,7 @@ public class DVDFile implements MediaInfo {
 		this.audioCodec = audioCodec;
 	}
 
-	public void setAudioChannels(short audioChannels) {
+	public void setAudioChannels(int audioChannels) {
 		this.audioChannels = audioChannels;
 	}
 
@@ -103,7 +104,7 @@ public class DVDFile implements MediaInfo {
 			is.skip(500);
 			// videoattributes: Coding mode, Standard, Aspect, Automatic Pan/Scan, Automatic Letterbox
 			int attributes = is.read();
-			switch (DVDUtils.getTwoBits(attributes, 6)) {
+			switch (ReadUtils.getTwoBits(attributes, 6)) {
 				case 0: 
 					dvd.setVideoCodec("mpeg1");
 					break;
@@ -111,7 +112,7 @@ public class DVDFile implements MediaInfo {
 					dvd.setVideoCodec("mpeg2");
 					break;
 			}
-			switch (DVDUtils.getTwoBits(attributes, 4)) {
+			switch (ReadUtils.getTwoBits(attributes, 4)) {
 				case 0: 
 					dvd.setStandard("NTSC");
 					break;
@@ -119,7 +120,7 @@ public class DVDFile implements MediaInfo {
 					dvd.setStandard("PAL");
 					break;
 			}
-			switch (DVDUtils.getTwoBits(attributes, 2)) {
+			switch (ReadUtils.getTwoBits(attributes, 2)) {
 				case 0: 
 					dvd.setAspect("4:3");
 					break;
@@ -132,7 +133,7 @@ public class DVDFile implements MediaInfo {
 			}
 			// videoattributes: CC for line 21, Resolution, Letterboxed, camera/film
 			attributes = is.read();
-			switch (DVDUtils.getThreeBits(attributes, 3)) {
+			switch (ReadUtils.getThreeBits(attributes, 3)) {
 			case 0: 
 				dvd.setFrameWidth(720);
 				if ("NTSC".equals(dvd.getStandard())) {
@@ -167,11 +168,11 @@ public class DVDFile implements MediaInfo {
 				break;
 			}
 			// number of audio streams
-			dvd.setNumberOfAudioStreams(DVDUtils.readShortBE(is));
+			dvd.setNumberOfAudioStreams(ReadUtils.readInt16BE(is));
 			if (dvd.getNumberOfAudioStreams() > 0) {
 				// audioattributes: Coding mode,, Multichannel extension present, Language type, Application mode
 				attributes = is.read();
-				switch (DVDUtils.getThreeBits(attributes, 5)) {
+				switch (ReadUtils.getThreeBits(attributes, 5)) {
 					case 0: 
 						dvd.setAudioCodec("ac3");
 						break;
@@ -199,7 +200,7 @@ public class DVDFile implements MediaInfo {
 				}
 				// audioattributes: Quantization/DRC, Sample rate, AudioChannels
 				attributes = is.read();
-				dvd.setAudioChannels((short) (DVDUtils.getThreeBits(attributes, 0) + 1));
+				dvd.setAudioChannels((short) (ReadUtils.getThreeBits(attributes, 0) + 1));
 			}
 			LOGGER.info(dvd.toString());
 			return dvd;
@@ -247,7 +248,7 @@ public class DVDFile implements MediaInfo {
 	}
 
 	@Override
-	public short getAudioChannels() {
+	public int getAudioChannels() {
 		return audioChannels;
 	}
 

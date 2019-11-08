@@ -18,7 +18,7 @@ package nl.siwoc.mediainfo.qtff;
 
 public class MinfBox extends Box {
 	
-    public MinfBox(Box parent, int size, byte[] data) throws Exception {
+    public MinfBox(Box parent, long size, byte[] data) throws Exception {
 		setType("minf");
 		setSize(size);
 		setParent(parent);

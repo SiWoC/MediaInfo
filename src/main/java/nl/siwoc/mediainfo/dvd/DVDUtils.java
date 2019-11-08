@@ -19,9 +19,6 @@ package nl.siwoc.mediainfo.dvd;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,26 +86,5 @@ public class DVDUtils {
 		System.out.println(dvd.getContainer());
 		System.out.println(dvd.getVideoCodec());
 	}
-	
-	public static int getSingleBit(int b, int position)
-	{
-	   return (b >> position) & 1;
-	}
 
-	public static int getTwoBits(int b, int position)
-	{
-	   return (b >> position) & 3;
-	}
-
-	public static int getThreeBits(int b, int position)
-	{
-	   return (b >> position) & 7;
-	}
-
-	public static short readShortBE(InputStream is) throws Exception {
-		byte[] bytes = new byte[2];
-		if (is.read(bytes) != 2) throw new Exception("Bytes read != 2, could not readShortBE");
-		return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getShort();
-	}
-	
 }

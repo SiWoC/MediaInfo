@@ -36,7 +36,7 @@ public class WaveFormatMpeg extends WaveFormat {
 		return "mp3";
 	}
 
-	public short getChannels() {
+	public int getChannels() {
 		return getWaveFormat().getChannels();
 	}
 

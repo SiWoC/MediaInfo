@@ -22,12 +22,14 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import nl.siwoc.mediainfo.utils.ReadUtils;
+
 public class Box {
 
 	protected static final Logger LOGGER = Logger.getLogger(Box.class.getName());
 	
 	private String type;
-	private int size;
+	private long size;
 	private ArrayList<Box> children = new ArrayList<Box>();
 	private Box parent = null;
 
@@ -39,12 +41,12 @@ public class Box {
 		this.type = type;
 	}
 
-	public int getSize() {
+	public long getSize() {
 		return size;
 	}
 	
-	public void setSize(int size) {
-		this.size = size;
+	public void setSize(long atomSize) {
+		this.size = atomSize;
 	}
 	
 	public Box getChild(String childTypeToGet) {
@@ -68,12 +70,12 @@ public class Box {
 		this.parent = parent;
 	}
 
-	protected void parseChildren(Box parent, int size, byte[] data) throws Exception {
+	protected void parseChildren(Box parent, long size, byte[] data) throws Exception {
 		long remaining = size - 8;
 		try (InputStream is = new ByteArrayInputStream(data)) {
 			while (remaining >= 4) {
-				int childSize = QTFFUtils.readIntBE(is);
-				String childType = QTFFUtils.readFourCC(is);
+				long childSize = ReadUtils.readUInt32BE(is);
+				String childType = ReadUtils.readFourCC(is);
 				byte[] childData;
 				remaining = remaining - childSize;
 				LOGGER.info("Parent: [" + getType() + "] has child: [" + childType + "] with size [" + childSize + "]");
@@ -81,10 +83,10 @@ public class Box {
 				String className = "nl.siwoc.mediainfo.qtff." + childType.substring(0, 1).toUpperCase() + childType.substring(1) + "Box";
 				try {
 					Class<?> clazz = Class.forName(className);
-					childData = new byte[childSize - 8];
+					childData = new byte[(int) (childSize - 8)];
 					is.read(childData);
 					skipNeeded = false;
-					Constructor<?> ctor = clazz.getConstructor(Box.class, int.class, byte[].class);
+					Constructor<?> ctor = clazz.getConstructor(Box.class, long.class, byte[].class);
 					addChild((Box) ctor.newInstance(new Object[] {parent, childSize, childData }));
 				} catch (Exception e) {
 					LOGGER.warning(e.getMessage());
@@ -100,13 +102,15 @@ public class Box {
 		}
 	}
 
-	protected SampleEntry createSampleEntry(Box parent, int entrySize, String entryType, byte[] entryData) throws Exception {
+	protected SampleEntry createSampleEntry(Box parent, long entrySize, String entryType, byte[] entryData) throws Exception {
 		try {
 			LOGGER.info("Parent: [" + getType() + "] has sampleEntry: [" + entryType + "] with size [" + entrySize + "]");
+			// ac-3 > Ac3SampleEntry
+			entryType = entryType.replace("-", "");
 			String className = "nl.siwoc.mediainfo.qtff." + entryType.substring(0, 1).toUpperCase() + entryType.substring(1) + "SampleEntry";
 			try {
 				Class<?> clazz = Class.forName(className);
-				Constructor<?> ctor = clazz.getConstructor(Box.class, int.class, byte[].class);
+				Constructor<?> ctor = clazz.getConstructor(Box.class, long.class, byte[].class);
 				return (SampleEntry)ctor.newInstance(new Object[] {parent, entrySize, entryData });
 			} catch (Exception e) {
 				// unneeded/unsupported/unknown i.e. newInstance failed
@@ -149,10 +153,16 @@ public class Box {
 
 	public ArrayList<Box> getChildren(String type) {
 		ArrayList<Box> childrenOfType = new ArrayList<Box>();
+		addChildrenOfType(childrenOfType, type);
+		return childrenOfType;
+	}
+		
+	public ArrayList<Box> addChildrenOfType(ArrayList<Box> childrenOfType, String type) {
 		for (Box child : children) {
 			if (child.getType().equals(type)) {
 				childrenOfType.add(child);
 			}
+			child.addChildrenOfType(childrenOfType, type);
 		}
 		return childrenOfType;
 	}

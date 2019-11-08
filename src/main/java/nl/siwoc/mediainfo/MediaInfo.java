@@ -28,6 +28,6 @@ public interface MediaInfo {
 	
 	public String getAudioCodec();
 	
-	public short getAudioChannels();
+	public int getAudioChannels();
 	
 }

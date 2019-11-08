@@ -20,10 +20,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import nl.siwoc.mediainfo.utils.ReadUtils;
+
 public class FtypBox extends Box {
 
 	private String majorBrand;
-	private int minorVersion;
+	private long minorVersion;
 	private ArrayList<String> compBrands = new ArrayList<String>();
 
 	public String getMajorBrand() {
@@ -34,11 +36,11 @@ public class FtypBox extends Box {
 		this.majorBrand = majorBrand;
 	}
 
-	public int getMinorVersion() {
+	public long getMinorVersion() {
 		return minorVersion;
 	}
 
-	public void setMinorVersion(int minorVersion) {
+	public void setMinorVersion(long minorVersion) {
 		this.minorVersion = minorVersion;
 	}
 
@@ -50,16 +52,16 @@ public class FtypBox extends Box {
 		this.compBrands = compBrands;
 	}
 
-	public FtypBox(Box parent, int size, byte[] data) throws Exception {
+	public FtypBox(Box parent, long atomSize, byte[] data) throws Exception {
 		setType("ftyp");
-		setSize(size);
+		setSize(atomSize);
 		setParent(parent);
 		try (InputStream is = new ByteArrayInputStream(data)){
-			setMajorBrand(QTFFUtils.readFourCC(is).trim());
+			setMajorBrand(ReadUtils.readFourCC(is).trim());
 			LOGGER.info("Ftyp has majorBrand: [" + getMajorBrand() + "]");
-			setMinorVersion(QTFFUtils.readIntBE(is));
+			setMinorVersion(ReadUtils.readUInt32BE(is));
 	        String brand;
-	        while (is.available() >= 4 && (brand = QTFFUtils.readFourCC(is)) != null) {
+	        while (is.available() >= 4 && (brand = ReadUtils.readFourCC(is)) != null) {
 	            compBrands.add(brand);
 	        }
 		} catch (Exception e) {

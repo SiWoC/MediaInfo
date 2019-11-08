@@ -19,37 +19,39 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import nl.siwoc.mediainfo.utils.ReadUtils;
+
 public class SowtSampleEntry extends SampleEntry {
 	
-	private short channelCount;
-	private short sampleSize;
-	private int sampleRate;
+	private int channelCount;
+	private int sampleSize;
+	private long sampleRate;
 	
-	public short getChannelCount() {
+	public int getChannelCount() {
 		return channelCount;
 	}
 
-	public void setChannelCount(short channelCount) {
+	public void setChannelCount(int channelCount) {
 		this.channelCount = channelCount;
 	}
 
-	public short getSampleSize() {
+	public int getSampleSize() {
 		return sampleSize;
 	}
 
-	public void setSampleSize(short sampleSize) {
+	public void setSampleSize(int sampleSize) {
 		this.sampleSize = sampleSize;
 	}
 
-	public int getSampleRate() {
+	public long getSampleRate() {
 		return sampleRate;
 	}
 
-	public void setSampleRate(int sampleRate) {
+	public void setSampleRate(long sampleRate) {
 		this.sampleRate = sampleRate;
 	}
 
-	public SowtSampleEntry(Box parent, int size, byte[] data) throws Exception {
+	public SowtSampleEntry(Box parent, long size, byte[] data) throws Exception {
 		setType("sowt");
 		setSize(size);
 		setParent(parent);
@@ -61,17 +63,17 @@ public class SowtSampleEntry extends SampleEntry {
 		try (InputStream is = new ByteArrayInputStream(data)){
 			// SampleEntry base
 			// skip 6
-			QTFFUtils.readIntBE(is);
-			QTFFUtils.readShortBE(is);
-			setDataReferenceIndex(QTFFUtils.readShortBE(is));
-			// VisualSampleEntry
+			ReadUtils.readUInt32BE(is);
+			ReadUtils.readInt16BE(is);
+			setDataReferenceIndex(ReadUtils.readUInt16BE(is));
+			// AudioSampleEntry
 			// skip 8 (0)
-			QTFFUtils.readIntBE(is);
-			QTFFUtils.readIntBE(is);
-			setChannelCount(QTFFUtils.readShortBE(is));
-			setSampleSize(QTFFUtils.readShortBE(is));
-			QTFFUtils.readShortBE(is);
-			setSampleRate(QTFFUtils.readIntBE(is));
+			ReadUtils.readUInt32BE(is);
+			ReadUtils.readUInt32BE(is);
+			setChannelCount(ReadUtils.readUInt16BE(is));
+			setSampleSize(ReadUtils.readUInt16BE(is));
+			ReadUtils.readUInt16BE(is);
+			setSampleRate(ReadUtils.readUInt32BE(is));
 			if (trak != null) {
 				trak.setChannelCount(getChannelCount());
 			}

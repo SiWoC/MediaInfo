@@ -21,7 +21,7 @@ import java.io.InputStream;
 
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
-public class Mp4aSampleEntry extends SampleEntry {
+public class Ac3SampleEntry extends SampleEntry {
 	
 	private int channelCount;
 	private int sampleSize;
@@ -51,8 +51,8 @@ public class Mp4aSampleEntry extends SampleEntry {
 		this.sampleRate = sampleRate;
 	}
 
-	public Mp4aSampleEntry(Box parent, long size, byte[] data) throws Exception {
-		setType("mp4a");
+	public Ac3SampleEntry(Box parent, long size, byte[] data) throws Exception {
+		setType("ac3");
 		setSize(size);
 		setParent(parent);
 		LOGGER.info("Creating " + getType());
@@ -65,7 +65,7 @@ public class Mp4aSampleEntry extends SampleEntry {
 			// skip 6
 			ReadUtils.readUInt32BE(is);
 			ReadUtils.readInt16BE(is);
-			setDataReferenceIndex(ReadUtils.readUInt16BE(is));
+			setDataReferenceIndex(ReadUtils.readInt16BE(is));
 			// AudioSampleEntry
 			// skip 8 (0)
 			ReadUtils.readUInt32BE(is);
@@ -85,7 +85,7 @@ public class Mp4aSampleEntry extends SampleEntry {
 	}
 
 	public String toString() {
-		return "Mp4aSampleEntry{ " +
+		return "Ac3SampleEntry{ " +
 	            "channelCount=" + getChannelCount() +
 	            ", sampleSize=" + getSampleSize() +
 	            ", sampleRate=" + getSampleRate() +

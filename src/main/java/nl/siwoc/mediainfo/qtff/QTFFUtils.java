@@ -19,11 +19,8 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +28,7 @@ import java.util.logging.SimpleFormatter;
 
 import nl.siwoc.mediainfo.FileProber;
 import nl.siwoc.mediainfo.MediaInfo;
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class QTFFUtils {
 
@@ -44,24 +42,19 @@ public class QTFFUtils {
 			qtff.setType("root");
 			try {
 				while (remaining >= 4) {
-					int atomSize = QTFFUtils.readIntBE(fis);
-					String fourCC = QTFFUtils.readFourCC(fis);
+					long atomSize = ReadUtils.readUInt32BE(fis);
+					String fourCC = ReadUtils.readFourCC(fis);
 					byte[] childData;
 					remaining = remaining - atomSize;
 					LOGGER.info("Found fourCC: [" + fourCC + "] with size [" + atomSize + "]");
 					// only interested in metadata, skipping everything else
 					if (fourCC.equals("ftyp")) {
-						childData = new byte[atomSize - 8];
+						childData = new byte[(int) (atomSize - 8)];
 						fis.read(childData);
 						qtff.addChild(new FtypBox(qtff, atomSize, childData));
 					} else if (fourCC.equals("moov")) {
-						childData = new byte[atomSize - 8];
+						childData = new byte[(int) (atomSize - 8)];
 						fis.read(childData);
-						FileOutputStream fos = new FileOutputStream("c:/temp/birdmoov.txt");
-						fos.write(0); fos.write(0); fos.write(0); fos.write(atomSize);
-						fos.write("moov".getBytes());
-						fos.write(childData);
-						fos.close();
 						qtff.addChild(new MoovBox(qtff, atomSize, childData));
 					} else if (atomSize < 8) {
 						throw new Exception("Invalid atomSize: [" + atomSize + "], file is not QTFF/MOV/MP4");
@@ -95,37 +88,6 @@ public class QTFFUtils {
 		}
 	}
 
-	public static int readIntBE(InputStream is) throws Exception {
-		byte[] bytes = new byte[4];
-		if (is.read(bytes) != 4) throw new Exception("Bytes read != 4, could not readIntBE");
-		return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getInt();
-	}
-
-	public static String readFourCC(InputStream is) throws Exception {
-		byte[] bytes = new byte[4];
-		if (is.read(bytes) != 4) throw new Exception("Bytes read != 4, could not readFourCC");
-		return new String(bytes, "ASCII");
-	}
-
-	public static long readWideBE(InputStream is) throws Exception {
-		byte[] bytes = new byte[8];
-		if (is.read(bytes) != 8) throw new Exception("Bytes read != 8, could not readWideBE");
-		return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getLong();
-	}
-	
-	public static byte[] readFlag(InputStream is) throws Exception {
-		byte[] bytes = new byte[3];
-		if (is.read(bytes) != 3) throw new Exception("Bytes read != 3, could not readWideBE");
-		return bytes;
-	}
-
-	public static short readShortBE(InputStream is) throws Exception {
-		byte[] bytes = new byte[2];
-		if (is.read(bytes) != 2) throw new Exception("Bytes read != 2, could not readShortBE");
-		return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getShort();
-	}
-	
-	
 	public static void main (String args[]) throws Exception {
 		try {
 			new File("log").mkdir();
@@ -144,6 +106,13 @@ public class QTFFUtils {
 		MediaInfo mp4 = QTFFUtils.parse(filename);
 		System.out.println(mp4.getContainer());
 		System.out.println(mp4.getVideoCodec());
+		Box qtff = ((MediaBox) mp4).getQtff();
+		qtff.print(0);
+		ArrayList<Box> ac3SampleEntries = qtff.getChildren("ac3");
+		for (Box box : ac3SampleEntries) {
+			Ac3SampleEntry ac3 = (Ac3SampleEntry) box;
+			System.out.println(ac3.getSampleRate());
+		}
 	}
 
 }

@@ -32,7 +32,7 @@ public class WaveFormatExtensible extends WaveFormat {
 		setWaveFormat(wf);
 	}
 	
-	public short getChannels() {
+	public int getChannels() {
 		return getWaveFormat().getChannels();
 	}
 

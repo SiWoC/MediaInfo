@@ -22,7 +22,7 @@ public abstract class StreamFormat extends Chunk {
 
 	protected abstract String getHandler();
 
-	protected abstract short getChannels();
+	protected abstract int getChannels();
 	
 
 }

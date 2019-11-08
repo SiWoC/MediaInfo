@@ -18,13 +18,13 @@ package nl.siwoc.mediainfo.qtff;
 
 public abstract class SampleEntry extends Box {
 	
-	private short dataReferenceIndex;
+	private int dataReferenceIndex;
 
-	public short getDataReferenceIndex() {
+	public int getDataReferenceIndex() {
 		return dataReferenceIndex;
 	}
 
-	public void setDataReferenceIndex(short dataReferenceIndex) {
+	public void setDataReferenceIndex(int dataReferenceIndex) {
 		this.dataReferenceIndex = dataReferenceIndex;
 	}
 	

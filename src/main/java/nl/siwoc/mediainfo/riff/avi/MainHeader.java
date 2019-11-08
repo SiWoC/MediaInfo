@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.siwoc.mediainfo.riff.Chunk;
-import nl.siwoc.mediainfo.riff.RIFFUtils;
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class MainHeader extends Chunk {
 
@@ -123,16 +123,16 @@ public class MainHeader extends Chunk {
 		setId("avih");
 		setSize(size);
 		try (InputStream is = new ByteArrayInputStream(data)){
-			setMicroSecondsPerFrame(RIFFUtils.readIntLE(is));
-			setMaxBytesPerSecond(RIFFUtils.readIntLE(is));
-			setPaddingGranularity(RIFFUtils.readIntLE(is)); //in newer avi formats, this is dwPaddingGranularity?
-			setFlags(RIFFUtils.readIntLE(is));
-			setTotalFrames(RIFFUtils.readIntLE(is));
-			setInitialFrames(RIFFUtils.readIntLE(is));
-			setNumberOfStreams(RIFFUtils.readIntLE(is));
-			setSuggestedBufferSize(RIFFUtils.readIntLE(is));
-			setFrameWidth(RIFFUtils.readIntLE(is));
-			setFrameHeight(RIFFUtils.readIntLE(is));
+			setMicroSecondsPerFrame(ReadUtils.readInt32LE(is));
+			setMaxBytesPerSecond(ReadUtils.readInt32LE(is));
+			setPaddingGranularity(ReadUtils.readInt32LE(is)); //in newer avi formats, this is dwPaddingGranularity?
+			setFlags(ReadUtils.readInt32LE(is));
+			setTotalFrames(ReadUtils.readInt32LE(is));
+			setInitialFrames(ReadUtils.readInt32LE(is));
+			setNumberOfStreams(ReadUtils.readInt32LE(is));
+			setSuggestedBufferSize(ReadUtils.readInt32LE(is));
+			setFrameWidth(ReadUtils.readInt32LE(is));
+			setFrameHeight(ReadUtils.readInt32LE(is));
 			// dwReserved[4] follows, ignored
 
 			LOGGER.log(Level.FINE,"AVI HEADER (avih): " + System.lineSeparator() +
