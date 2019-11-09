@@ -50,7 +50,7 @@ public class MKVUtils {
 		}
 
 		//String filename = "O:/downloads/Wallace and Gromit - A Matter of Loaf and Death (2008)/Wallace and Gromit - A Matter of Loaf and Death (2008).mkv";
-		String filename = "O:/downloads/Aladdin (1992)/Aladdin (1992).mkv";
+		String filename = "O:/Films/Pacific Rim Uprising (2018)/Pacific Rim Uprising (2018).mkv";
 		MediaInfo mediaInfo = MKVUtils.parse(filename);
 		System.out.println(mediaInfo.getContainer());
 		System.out.println(mediaInfo.getVideoCodec());

@@ -85,6 +85,23 @@ class FileProberTests {
 	}
 	
 	@Test
+	void testMKV_4() {
+		//MKV
+		String filename = "O:/Films/Pacific Rim Uprising (2018)/Pacific Rim Uprising (2018).mkv";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("mkv", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg4", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(1280, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(536, mediaInfo.getFrameHeight());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+	
+	@Test
 	void testAVI_1() {
 		String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
 		MediaInfo mediaInfo = fp.getMediaInfo(filename);
