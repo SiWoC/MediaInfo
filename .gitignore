@@ -40,3 +40,4 @@ hs_err_pid*
 
 # ignore folders generated at runtime
 log
+/mediainfo.properties
