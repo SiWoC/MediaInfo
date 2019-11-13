@@ -18,15 +18,11 @@ package nl.siwoc.mediainfo.riff.avi;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class BitmapInfo extends StreamFormat {
 
-	private static final Logger LOGGER = Logger.getLogger(BitmapInfo.class.getName());
-	
 	private int width;
 	private int height;
 	private short planes;
@@ -135,7 +131,7 @@ public class BitmapInfo extends StreamFormat {
 			setNumberOfColorIndexesUsed(ReadUtils.readInt32LE(is));
 			setNumberOfColorIndexesImportant(ReadUtils.readInt32LE(is));
 
-			LOGGER.log(Level.FINE,"AVI BitmapInfo (strf): " + System.lineSeparator() +
+			Logger.logInfo("AVI BitmapInfo (strf): " + System.lineSeparator() +
 				"   size=" + size + System.lineSeparator() +
 				"   width=" + width + System.lineSeparator() +
 				"   height=" + height + System.lineSeparator() +

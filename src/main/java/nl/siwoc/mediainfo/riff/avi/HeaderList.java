@@ -19,16 +19,13 @@ package nl.siwoc.mediainfo.riff.avi;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import nl.siwoc.mediainfo.riff.ListChunk;
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class HeaderList extends ListChunk {
 
-	private static final Logger LOGGER = Logger.getLogger(HeaderList.class.getName());
-	
 	private MainHeader avih;
 	private StreamList strl;
 	private ArrayList<StreamList> videoStreams = new ArrayList<StreamList>();
@@ -88,7 +85,7 @@ public class HeaderList extends ListChunk {
 					throw new Exception("Invalid AVI HeaderList, unable to find header/streamlist LIST[" + i + "], found: " + fourCC);
 				}
 				int strlSize = ReadUtils.readInt32LE(is);
-				LOGGER.log(Level.FINE,"strlSize: " + strlSize);
+				Logger.logDebug("strlSize: " + strlSize);
 				// expect strl
 				fourCC = ReadUtils.readFourCC(is);
 				if (!"strl".equals(fourCC)) {

@@ -18,15 +18,12 @@ package nl.siwoc.mediainfo.riff.avi;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class WaveFormat extends StreamFormat {
 
-	private static final Logger LOGGER = Logger.getLogger(WaveFormat.class.getName());
-	
 	private short formatTag;
 	private int channels; 
 	private int samplesPerSecond; 
@@ -107,7 +104,7 @@ public class WaveFormat extends StreamFormat {
 				return new WaveFormatDVM(wf);
 			}
 			default: {
-				LOGGER.severe("Unsupported formatTag=" + Integer.toHexString(wf.getFormatTag() & 0xffff));
+				Logger.logError("Unsupported formatTag=" + Integer.toHexString(wf.getFormatTag() & 0xffff));
 				return wf;
 			}
 		}
@@ -124,7 +121,7 @@ public class WaveFormat extends StreamFormat {
 			setBlockAlign(ReadUtils.readInt16LE(is)); 
 			setBitsPerSample(ReadUtils.readInt16LE(is)); 
 			setExtraInfoSize(ReadUtils.readInt16LE(is)); 	
-			LOGGER.log(Level.FINE,"WaveFormat" + System.lineSeparator() +
+			Logger.logInfo("WaveFormat" + System.lineSeparator() +
 				"  formatTag=" + Integer.toHexString(getFormatTag() & 0xffff) + System.lineSeparator() +
 				"  channels=" + getChannels() + System.lineSeparator() +
 				"  samplesPerSecond=" + getSamplesPerSecond() + System.lineSeparator() +

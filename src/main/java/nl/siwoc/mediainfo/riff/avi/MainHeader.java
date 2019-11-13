@@ -18,16 +18,13 @@ package nl.siwoc.mediainfo.riff.avi;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import nl.siwoc.mediainfo.riff.Chunk;
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class MainHeader extends Chunk {
 
-	private static final Logger LOGGER = Logger.getLogger(MainHeader.class.getName());
-	
 	private int microSecondsPerFrame;
 	private int maxBytesPerSecond;
 	private int paddingGranularity;
@@ -135,7 +132,7 @@ public class MainHeader extends Chunk {
 			setFrameHeight(ReadUtils.readInt32LE(is));
 			// dwReserved[4] follows, ignored
 
-			LOGGER.log(Level.FINE,"AVI HEADER (avih): " + System.lineSeparator() +
+			Logger.logInfo("AVI HEADER (avih): " + System.lineSeparator() +
 				"   microSecondsPerFrame=" + getMicroSecondsPerFrame() + System.lineSeparator() +
 				"   maxBytesPerSecond=" + getMaxBytesPerSecond() + System.lineSeparator() +
 				"   paddingGranularity=" + getPaddingGranularity() + System.lineSeparator() +

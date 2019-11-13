@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class MdhdBox extends FullBox {
@@ -65,7 +66,7 @@ public class MdhdBox extends FullBox {
 		setType("mdhd");
 		setSize(size);
 		setParent(parent);
-		LOGGER.info("Creating " + getType());
+		Logger.logInfo("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());
 	        setFlag(ReadUtils.readFlag(is));
@@ -80,7 +81,7 @@ public class MdhdBox extends FullBox {
 	        	setTimescale(ReadUtils.readUInt32BE(is));
 	        	setDuration(new BigDecimal(ReadUtils.readUInt32BE(is)));
 	        }
-	        LOGGER.info(toString());
+	        Logger.logInfo(toString());
 	        // don't need rest at this moment
 		} catch (Exception e){
 			throw e;

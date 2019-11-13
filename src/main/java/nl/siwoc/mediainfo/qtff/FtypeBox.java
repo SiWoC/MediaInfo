@@ -19,14 +19,10 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.logging.Logger;
-
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class FtypeBox extends Box {
 
-	private static final Logger LOGGER = Logger.getLogger(FtypeBox.class.getName());
-	
 	private String majorBrand;
 	private long minorVersion;
 	private ArrayList<String> compBrands = new ArrayList<String>();

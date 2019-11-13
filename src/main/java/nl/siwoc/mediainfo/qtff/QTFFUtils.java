@@ -19,23 +19,15 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-
-import nl.siwoc.mediainfo.FileProber;
 import nl.siwoc.mediainfo.MediaInfo;
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class QTFFUtils {
 
-	private static final Logger LOGGER = Logger.getLogger(QTFFUtils.class.getName());
-
 	public static MediaInfo parse(String filename) throws Exception {
-		LOGGER.info("Start parsing file: " + filename);
+		Logger.logInfo("Start parsing file: " + filename);
 		try (FileInputStream fis = new FileInputStream(filename)) {
 			long remaining = new File(filename).length();
 			Box qtff = new Box();
@@ -46,7 +38,7 @@ public class QTFFUtils {
 					String fourCC = ReadUtils.readFourCC(fis);
 					byte[] childData;
 					remaining = remaining - atomSize;
-					LOGGER.info("Found fourCC: [" + fourCC + "] with size [" + atomSize + "]");
+					Logger.logInfo("Found fourCC: [" + fourCC + "] with size [" + atomSize + "]");
 					// only interested in metadata, skipping everything else
 					if (fourCC.equals("ftyp")) {
 						childData = new byte[(int) (atomSize - 8)];
@@ -69,13 +61,13 @@ public class QTFFUtils {
 				}
 			}
 			if (qtff.getChild("moov") != null && qtff.getChild("ftyp") == null) {
-				LOGGER.info("moov without ftyp = mov.mp41");
+				Logger.logInfo("moov without ftyp = mov.mp41");
 				qtff.addChild(new FtypBox("mp41", 0));
 			}
 			if (qtff.getChild("ftyp") == null) {
 				throw new Exception("No [ftyp], file is not QTFF/MOV/MP4");
 			}
-			if (LOGGER.getLevel() == Level.FINER) {
+			if (Logger.isInTrace()) {
 				qtff.print(0);
 			}
 			MediaBox mb = new MediaBox(qtff);
@@ -89,17 +81,7 @@ public class QTFFUtils {
 	}
 
 	public static void main (String args[]) throws Exception {
-		try {
-			new File("log").mkdir();
-			FileHandler handler = new FileHandler("log/FileProber.log", 500000, 2, true);
-			handler.setFormatter(new SimpleFormatter());
-			Logger.getLogger("").addHandler(handler);
-			FileProber.setLogLevel(Level.FINER);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Logger.setLogLevel("TRACE");
 		//String filename = "O:/Kinder films/Free Birds (2013)/Free Birds.mp4";
 		//String filename = "N:/Casper/huiswerk/Film NL/Dood.MOV";
 		String filename = "O:/Films/Glass (2019)/Glass (2019).mp4";

@@ -1,16 +1,10 @@
 package test.nl.siwoc.mediainfo;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-
 import org.junit.jupiter.api.*;
 
 import nl.siwoc.mediainfo.FileProber;
 import nl.siwoc.mediainfo.MediaInfo;
+import nl.siwoc.mediainfo.utils.Logger;
 
 class FileProberTests {
 
@@ -19,18 +13,8 @@ class FileProberTests {
 	@BeforeAll
 	static void beforeAll() {
 		System.out.println("Running setup");
-		try {
-			new File("log").mkdir();
-			FileHandler handler = new FileHandler("log/FileProber.log", 500000, 2, true);
-			handler.setFormatter(new SimpleFormatter());
-			Logger.getLogger("").addHandler(handler);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		fp = new FileProber();
-		FileProber.setLogLevel(Level.FINER);
+		Logger.setLogLevel("TRACE");
 	}
 
 
@@ -57,7 +41,7 @@ class FileProberTests {
 		MediaInfo mediaInfo = fp.getMediaInfo(filename);
 		if (mediaInfo != null) {
 			Assertions.assertEquals("mkv", mediaInfo.getContainer());
-			Assertions.assertEquals("mpeg4", mediaInfo.getVideoCodec());
+			Assertions.assertEquals("h264", mediaInfo.getVideoCodec());
 			Assertions.assertEquals(1920, mediaInfo.getFrameWidth());
 			Assertions.assertEquals(1080, mediaInfo.getFrameHeight());
 			Assertions.assertEquals("dts", mediaInfo.getAudioCodec());
@@ -74,7 +58,7 @@ class FileProberTests {
 		MediaInfo mediaInfo = fp.getMediaInfo(filename);
 		if (mediaInfo != null) {
 			Assertions.assertEquals("mkv", mediaInfo.getContainer());
-			Assertions.assertEquals("mpeg4", mediaInfo.getVideoCodec());
+			Assertions.assertEquals("h264", mediaInfo.getVideoCodec());
 			Assertions.assertEquals(1920, mediaInfo.getFrameWidth());
 			Assertions.assertEquals(1080, mediaInfo.getFrameHeight());
 			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
@@ -91,7 +75,7 @@ class FileProberTests {
 		MediaInfo mediaInfo = fp.getMediaInfo(filename);
 		if (mediaInfo != null) {
 			Assertions.assertEquals("mkv", mediaInfo.getContainer());
-			Assertions.assertEquals("mpeg4", mediaInfo.getVideoCodec());
+			Assertions.assertEquals("h264", mediaInfo.getVideoCodec());
 			Assertions.assertEquals(1280, mediaInfo.getFrameWidth());
 			Assertions.assertEquals(536, mediaInfo.getFrameHeight());
 			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());

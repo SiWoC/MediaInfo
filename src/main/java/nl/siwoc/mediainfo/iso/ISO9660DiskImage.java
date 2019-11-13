@@ -19,8 +19,8 @@ package nl.siwoc.mediainfo.iso;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 /* 
@@ -29,8 +29,6 @@ import nl.siwoc.mediainfo.utils.ReadUtils;
  */
 public class ISO9660DiskImage {
 
-	private static final Logger LOGGER = Logger.getLogger(ISO9660DiskImage.class.getName());
-	
 	private ISO9660DiskImageFS rootFS;
 	private RandomAccessFile raf;
 	private static final int SECTORSIZE = 2048;
@@ -75,9 +73,9 @@ public class ISO9660DiskImage {
 
 	private void createRootFS(byte[] data) throws Exception {
 		int startSector = ReadUtils.readInt32LE(data, 158);
-		LOGGER.finer("StartSector: " + startSector);
+		Logger.logTrace("StartSector: " + startSector);
 		int size = ReadUtils.readInt32LE(data, 166);
-		LOGGER.finer("Size: " + size);
+		Logger.logTrace("Size: " + size);
 		setRootFS(new ISO9660DiskImageFS(startSector, size, "", true, getRaf()));
 	}
 

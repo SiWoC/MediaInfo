@@ -18,6 +18,8 @@ package nl.siwoc.mediainfo.qtff;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class StsdBox extends FullBox {
@@ -36,12 +38,12 @@ public class StsdBox extends FullBox {
 		setType("stsd");
 		setSize(size);
 		setParent(parent);
-		LOGGER.info("Creating " + getType());
+		Logger.logInfo("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());
 	        setFlag(ReadUtils.readFlag(is));
 	        setEntryCount(ReadUtils.readUInt32BE(is));
-	        LOGGER.info(toString());
+	        Logger.logInfo(toString());
 	        //for (int i = 0 ; i < entryCount ; i++)
 	        // only reading 1 sample
 	        {

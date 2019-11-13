@@ -16,34 +16,25 @@
  *******************************************************************************/
 package nl.siwoc.mediainfo.riff;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-
-import nl.siwoc.mediainfo.FileProber;
 import nl.siwoc.mediainfo.MediaInfo;
 import nl.siwoc.mediainfo.riff.avi.AVIRIFF;
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class RIFFUtils {
 
-	private static final Logger LOGGER = Logger.getLogger(RIFFUtils.class.getName());
-
 	public static MediaInfo parse(String filename) throws Exception {
-		LOGGER.info("Start parsing file: " + filename);
+		Logger.logInfo("Start parsing file: " + filename);
 		try (FileInputStream fis = new FileInputStream(filename)) {
 			String fourCC = ReadUtils.readFourCC(fis);
-			LOGGER.info("Found fourCC: [" + fourCC + "] should be [RIFF]");
+			Logger.logInfo("Found fourCC: [" + fourCC + "] should be [RIFF]");
 			if (!"RIFF".equals(fourCC)) {
 				throw new Exception("File is not RIFF");
 			}
 			int size = ReadUtils.readInt32LE(fis);
 			String fileType = ReadUtils.readFourCC(fis);
-			LOGGER.info("Found fileType: [" + fileType + "]");
+			Logger.logInfo("Found fileType: [" + fileType + "]");
 			if (!"AVI ".equals(fileType)) {
 				throw new Exception("RIFF FileType: " + fileType + " is not supported");
 			}
@@ -54,19 +45,7 @@ public class RIFFUtils {
 	}
 
 	public static void main (String[] args) throws Exception {
-		try {
-			new File("log").mkdir();
-			
-			FileHandler handler = new FileHandler("log/FileProber.log", 500000, 2, true);
-			handler.setFormatter(new SimpleFormatter());
-			Logger.getLogger("").addHandler(handler);
-			FileProber.setLogLevel(Level.FINER);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		Logger.setLogLevel("TRACE");
 		String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
 		MediaInfo mediaInfo = RIFFUtils.parse(filename);
 		System.out.println(mediaInfo.getContainer());

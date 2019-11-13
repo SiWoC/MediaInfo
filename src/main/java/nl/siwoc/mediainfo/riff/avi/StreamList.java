@@ -18,15 +18,12 @@ package nl.siwoc.mediainfo.riff.avi;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import nl.siwoc.mediainfo.riff.ListChunk;
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class StreamList extends ListChunk {
-
-	private static final Logger LOGGER = Logger.getLogger(StreamList.class.getName());
 
 	private StreamHeader strh;
 	private StreamFormat strf;
@@ -69,7 +66,7 @@ public class StreamList extends ListChunk {
 				throw new Exception("Invalid AVI StreamList, unable to find strf, found: " + fourCC);
 			}
 			childSize = ReadUtils.readInt32LE(is);
-			LOGGER.log(Level.FINE,"strfSize: " + childSize);
+			Logger.logDebug("strfSize: " + childSize);
 			childData = new byte[childSize];
 			is.read(childData);
 			if ("vids".equals(getStrh().getType())) {

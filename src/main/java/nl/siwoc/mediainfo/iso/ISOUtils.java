@@ -16,23 +16,14 @@
  *******************************************************************************/
 package nl.siwoc.mediainfo.iso;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-
-import nl.siwoc.mediainfo.FileProber;
 import nl.siwoc.mediainfo.MediaInfo;
 import nl.siwoc.mediainfo.dvd.DVDFile;
+import nl.siwoc.mediainfo.utils.Logger;
 
 public class ISOUtils {
 
-	private static final Logger LOGGER = Logger.getLogger(ISOUtils.class.getName());
-
 	public static MediaInfo parse(String filename) throws Exception {
-		LOGGER.info("Start parsing file: " + filename);
+		Logger.logInfo("Start parsing file: " + filename);
 		ISO9660DiskImage f = null;
 		try {
 			f = new ISO9660DiskImage(filename);
@@ -53,7 +44,7 @@ public class ISOUtils {
 		DVDFile dvdFile = null;
 		for (int i = 1 ; i < 100 ; i++) {
 			String vtsFilename = "VIDEO_TS" + System.getProperty("file.separator") + "VTS_" + String.format("%02d", i) + "_0.IFO";
-			LOGGER.info("Searching vts-file: " + vtsFilename);
+			Logger.logInfo("Searching vts-file: " + vtsFilename);
 			ISO9660DiskImageFS vtsFile = iso.getFile(vtsFilename);
 			if (vtsFile == null) {
 				throw new Exception("No DVD ISO file [VTS_xx_0.IFO] found.");
@@ -64,28 +55,17 @@ public class ISOUtils {
 			if (dvdFile.getNumberOfAudioStreams() > 0) {
 				return dvdFile;
 			}
-			LOGGER.info("vts-file: " + vtsFilename + " has no AudioStreams searching next IFO");
+			Logger.logInfo("vts-file: " + vtsFilename + " has no AudioStreams searching next IFO");
 		}
 		return dvdFile;
 		//throw new Exception("No DVD ISO file [VTS_xx_0.IFO] found.");
 	}
 
 	public static void main (String args[]) throws Exception {
-		try {
-			new File("log").mkdir();
-			
-			FileHandler handler = new FileHandler("log/FileProber.log", 500000, 2, true);
-			handler.setFormatter(new SimpleFormatter());
-			Logger.getLogger("").addHandler(handler);
-			FileProber.setLogLevel(Level.FINER);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		String filename = "O:/Kinder films/Early Man (2018)/Early Man (2018).iso";
+		Logger.setLogLevel("TRACE");
+		//String filename = "O:/Kinder films/Early Man (2018)/Early Man (2018).iso";
 		//String filename = "O:/downloads/Aladdin (1992)/Aladdin (1992).mkv";
+		String filename = "O:/downloads/Hotel Transylvania 3 Summer Vacation (2018)/Hotel Transylvania 3 Summer Vacation (2018).iso";
 		MediaInfo iso = ISOUtils.parse(filename);
 		System.out.println(iso.getContainer());
 		System.out.println(iso.getVideoCodec());

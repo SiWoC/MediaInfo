@@ -19,6 +19,7 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class HdlrBox extends FullBox {
@@ -46,7 +47,7 @@ public class HdlrBox extends FullBox {
 		setType("hdlr");
 		setSize(size);
 		setParent(parent);
-		LOGGER.info("Creating " + getType());
+		Logger.logInfo("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());
 	        setFlag(ReadUtils.readFlag(is));
@@ -58,7 +59,7 @@ public class HdlrBox extends FullBox {
 		        	trak.setHandlerType(getHandlerType());
 		        }
 	        }
-	        LOGGER.info(toString());
+	        Logger.logInfo(toString());
 	        // don't need rest at this moment
 		} catch (Exception e){
 			throw e;

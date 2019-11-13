@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class FtypBox extends Box {
@@ -58,7 +59,7 @@ public class FtypBox extends Box {
 		setParent(parent);
 		try (InputStream is = new ByteArrayInputStream(data)){
 			setMajorBrand(ReadUtils.readFourCC(is).trim());
-			LOGGER.info("Ftyp has majorBrand: [" + getMajorBrand() + "]");
+			Logger.logInfo("Ftyp has majorBrand: [" + getMajorBrand() + "]");
 			setMinorVersion(ReadUtils.readUInt32BE(is));
 	        String brand;
 	        while (is.available() >= 4 && (brand = ReadUtils.readFourCC(is)) != null) {
@@ -72,7 +73,7 @@ public class FtypBox extends Box {
 	public FtypBox(String majorBrand, int minorVersion) {
 		setType("ftyp");
 		setMajorBrand(majorBrand);
-		LOGGER.info("Ftyp has majorBrand: [" + getMajorBrand() + "]");
+		Logger.logInfo("Ftyp has majorBrand: [" + getMajorBrand() + "]");
 		setMinorVersion(minorVersion);
 	}
 

@@ -16,41 +16,22 @@
  *******************************************************************************/
 package nl.siwoc.mediainfo.mkv;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-
-import nl.siwoc.mediainfo.FileProber;
 import nl.siwoc.mediainfo.MediaInfo;
+import nl.siwoc.mediainfo.utils.Logger;
 
 public class MKVUtils {
 
-	private static final Logger LOGGER = Logger.getLogger(MKVUtils.class.getName());
-
 	public static MediaInfo parse(String filename) throws Exception {
-		LOGGER.info("Start parsing file: " + filename);
+		Logger.logInfo("Start parsing file: " + filename);
 		return new MKVFile(filename);
 	}
 	
 	public static void main (String[] args) throws Exception {
-		try {
-			new File("log").mkdir();
-			
-			FileHandler handler = new FileHandler("log/FileProber.log", 500000, 2, true);
-			handler.setFormatter(new SimpleFormatter());
-			Logger.getLogger("").addHandler(handler);
-			FileProber.setLogLevel(Level.FINER);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Logger.setLogLevel("TRACE");
 
 		//String filename = "O:/downloads/Wallace and Gromit - A Matter of Loaf and Death (2008)/Wallace and Gromit - A Matter of Loaf and Death (2008).mkv";
-		String filename = "O:/Films/Pacific Rim Uprising (2018)/Pacific Rim Uprising (2018).mkv";
+		//String filename = "O:/Films/Pacific Rim Uprising (2018)/Pacific Rim Uprising (2018).mkv";
+		String filename = "O:/Films/Gräns (2018)/Grans (2018).mkv";
 		MediaInfo mediaInfo = MKVUtils.parse(filename);
 		System.out.println(mediaInfo.getContainer());
 		System.out.println(mediaInfo.getVideoCodec());

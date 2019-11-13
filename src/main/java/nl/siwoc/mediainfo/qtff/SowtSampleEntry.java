@@ -19,6 +19,7 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class SowtSampleEntry extends SampleEntry {
@@ -55,7 +56,7 @@ public class SowtSampleEntry extends SampleEntry {
 		setType("sowt");
 		setSize(size);
 		setParent(parent);
-		LOGGER.info("Creating " + getType());
+		Logger.logInfo("Creating " + getType());
         TrakBox trak = (TrakBox)searchUp("trak");
         if (trak != null) {
         	trak.setCodecId(getType());
@@ -77,7 +78,7 @@ public class SowtSampleEntry extends SampleEntry {
 			if (trak != null) {
 				trak.setChannelCount(getChannelCount());
 			}
-			LOGGER.info(toString());
+			Logger.logInfo(toString());
 			
 		} catch (Exception e) {
 			throw e;

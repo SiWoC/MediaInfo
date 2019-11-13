@@ -18,16 +18,13 @@ package nl.siwoc.mediainfo.riff.avi;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import nl.siwoc.mediainfo.riff.Chunk;
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class StreamHeader extends Chunk{
 
-	private static final Logger LOGGER = Logger.getLogger(StreamHeader.class.getName());
-	
 	private String type;
 	private String handler;
 	private int flags;
@@ -155,7 +152,7 @@ public class StreamHeader extends Chunk{
 			setSampleSize(ReadUtils.readInt32LE(is));
 			//rcFrame rectangle follows, ignored
 
-			LOGGER.log(Level.FINE,"Stream Header (strh):" + System.lineSeparator() +
+			Logger.logInfo("Stream Header (strh):" + System.lineSeparator() +
 				"   type=[" + type + "]" + System.lineSeparator() +
 				"   handler=[" + handler + "]" + System.lineSeparator() +
 				"   flags=" + flags + System.lineSeparator() +

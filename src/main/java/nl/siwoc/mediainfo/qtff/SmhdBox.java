@@ -19,6 +19,7 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class SmhdBox extends FullBox {
@@ -27,11 +28,11 @@ public class SmhdBox extends FullBox {
 		setType("smhd");
 		setSize(size);
 		setParent(parent);
-		LOGGER.info("Creating " + getType());
+		Logger.logInfo("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());
 	        setFlag(ReadUtils.readFlag(is));
-	        LOGGER.info(toString());
+	        Logger.logInfo(toString());
 	        // don't need rest at this moment
 		} catch (Exception e){
 			throw e;

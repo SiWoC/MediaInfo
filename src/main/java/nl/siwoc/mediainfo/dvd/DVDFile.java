@@ -19,15 +19,13 @@ package nl.siwoc.mediainfo.dvd;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 import nl.siwoc.mediainfo.MediaInfo;
+import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class DVDFile implements MediaInfo {
 
-	private static final Logger LOGGER = Logger.getLogger(DVDFile.class.getName());
-	
 	private String container;
 	private String videoCodec;
 	private String standard;
@@ -83,7 +81,7 @@ public class DVDFile implements MediaInfo {
 	}
 
 	public static DVDFile parseFromFile(String filename) throws Exception {
-		LOGGER.info("Start parsing file: " + filename);
+		Logger.logInfo("Start parsing file: " + filename);
 		try (FileInputStream fis = new FileInputStream(filename)) {
 			return parseFromStream(fis);
 		} catch (Exception e) {
@@ -202,7 +200,7 @@ public class DVDFile implements MediaInfo {
 				attributes = is.read();
 				dvd.setAudioChannels((short) (ReadUtils.getThreeBits(attributes, 0) + 1));
 			}
-			LOGGER.info(dvd.toString());
+			Logger.logInfo(dvd.toString());
 			return dvd;
 		} catch (Exception e) {
 			throw e;
