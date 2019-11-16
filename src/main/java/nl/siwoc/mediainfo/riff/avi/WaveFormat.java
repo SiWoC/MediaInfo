@@ -120,7 +120,11 @@ public class WaveFormat extends StreamFormat {
 			setAverageBytesPerSecond(ReadUtils.readInt32LE(is)); 
 			setBlockAlign(ReadUtils.readInt16LE(is)); 
 			setBitsPerSample(ReadUtils.readInt16LE(is)); 
-			setExtraInfoSize(ReadUtils.readInt16LE(is)); 	
+			try {
+				setExtraInfoSize(ReadUtils.readInt16LE(is));
+			} catch (Exception e) {
+				// No extra info
+			}
 			Logger.logInfo("WaveFormat" + System.lineSeparator() +
 				"  formatTag=" + Integer.toHexString(getFormatTag() & 0xffff) + System.lineSeparator() +
 				"  channels=" + getChannels() + System.lineSeparator() +

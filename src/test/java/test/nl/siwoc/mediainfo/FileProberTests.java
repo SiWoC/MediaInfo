@@ -24,7 +24,7 @@ class FileProberTests {
 		MediaInfo mediaInfo = fp.getMediaInfo(filename);
 		if (mediaInfo != null) {
 			Assertions.assertEquals("mkv", mediaInfo.getContainer());
-			Assertions.assertEquals("mpeg4", mediaInfo.getVideoCodec());
+			Assertions.assertEquals("xvid", mediaInfo.getVideoCodec());
 			Assertions.assertEquals(1904, mediaInfo.getFrameWidth());
 			Assertions.assertEquals(1080, mediaInfo.getFrameHeight());
 			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
@@ -112,6 +112,22 @@ class FileProberTests {
 			Assertions.assertEquals(416, mediaInfo.getFrameHeight());
 			Assertions.assertEquals(2, mediaInfo.getAudioChannels());
 			Assertions.assertEquals("mp3", mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+
+	@Test
+	void testAVI_3() {
+		String filename = "O:/Films/Spider Man Into the Spider-Verse (2018)/Into the Spider-Verse (2018) [ID MOVIEMETER 1119894].avi";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("avi", mediaInfo.getContainer());
+			Assertions.assertEquals("xvid", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(304, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
 		} else {
 			Assertions.fail("No MediaInfo returned");
 		}
@@ -297,7 +313,7 @@ class FileProberTests {
 			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
 			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
 			Assertions.assertEquals(576, mediaInfo.getFrameHeight());
-			Assertions.assertEquals(2, mediaInfo.getAudioChannels());
+			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
 			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
 		} else {
 			Assertions.fail("No MediaInfo returned");
@@ -308,6 +324,23 @@ class FileProberTests {
 	void testISO_5() {
 		//ISO DVD9
 		String filename = "O:/Kinder films/De Lorax en het Verdwenen Bos (2012)/DR_SEUSS_THE_LORAX.iso";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("dvdiso", mediaInfo.getContainer());
+			Assertions.assertEquals("mpeg2", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(720, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(576, mediaInfo.getFrameHeight());
+			Assertions.assertEquals(6, mediaInfo.getAudioChannels());
+			Assertions.assertEquals("ac3", mediaInfo.getAudioCodec());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+	
+	// O:/Kinder films/Jasper & Julia en de Dappere Ridders/Jasper & Julia en de Dappere Ridders.iso
+	@Test
+	void testISO_6() {
+		String filename = "O:/Kinder films/Jasper & Julia en de Dappere Ridders/Jasper & Julia en de Dappere Ridders.iso";
 		MediaInfo mediaInfo = fp.getMediaInfo(filename);
 		if (mediaInfo != null) {
 			Assertions.assertEquals("dvdiso", mediaInfo.getContainer());

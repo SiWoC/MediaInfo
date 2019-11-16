@@ -46,7 +46,8 @@ public class RIFFUtils {
 
 	public static void main (String[] args) throws Exception {
 		Logger.setLogLevel("TRACE");
-		String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
+		String filename = "O:\\Kinder films\\Monsters Versus Aliens - Cloning Around (2014)\\Monsters Versus Aliens - Cloning Around (2014) [ID imdb tt2782214].avi";
+		//String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
 		MediaInfo mediaInfo = RIFFUtils.parse(filename);
 		System.out.println(mediaInfo.getContainer());
 		System.out.println(mediaInfo.getVideoCodec());

@@ -49,7 +49,13 @@ public class MediaBox implements MediaInfo{
 
 	@Override
 	public String getVideoCodec() {
-		return ((FtypBox) qtff.getChild("ftyp")).getMajorBrand();
+		String videoCodec = ((FtypBox) qtff.getChild("ftyp")).getMajorBrand();
+		ArrayList<String> compBrands =  ((FtypBox) qtff.getChild("ftyp")).getCompBrands();
+		if ("isom".equalsIgnoreCase(videoCodec) && compBrands != null && compBrands.size() > 0) {
+			return compBrands.get(0);
+		} else {
+			return videoCodec;
+		}
 	}
 
 	@Override

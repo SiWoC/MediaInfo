@@ -18,6 +18,7 @@ package nl.siwoc.mediainfo.dvd;
 
 import java.io.File;
 import java.io.FilenameFilter;
+
 import nl.siwoc.mediainfo.MediaInfo;
 import nl.siwoc.mediainfo.utils.Logger;
 
@@ -41,7 +42,7 @@ public class DVDUtils {
 	}
 
 	private static MediaInfo parseVTS(File videoTsFolder) throws Exception {
-		DVDFile dvdFile = null;
+		DVDFile result = null;
 		File[] vtsFiles = videoTsFolder.listFiles(new FilenameFilter() {
 			
 			@Override
@@ -49,15 +50,23 @@ public class DVDUtils {
 				return name.matches("VTS_\\d\\d_0.IFO");
 			}
 		});
+
+		int numberOfAudioChannels = 0;
+		DVDFile dvdFile = null;
 		for (File file : vtsFiles) {
 			if (file.isFile()) {
 				dvdFile = DVDFile.parseFromFile(file.getAbsolutePath());
-				if (dvdFile.getNumberOfAudioStreams() > 0) {
-					return dvdFile;
+				if (dvdFile.getNumberOfAudioStreams() > 0 && dvdFile.getAudioChannels() > numberOfAudioChannels) {
+					numberOfAudioChannels = dvdFile.getAudioChannels();
+					result = dvdFile;
 				}
 			}
 		}
-		return dvdFile;
+		if (result == null) {
+			return dvdFile;
+		} else {
+			return result;
+		}
 	}
 
 	public static void main (String args[]) throws Exception {

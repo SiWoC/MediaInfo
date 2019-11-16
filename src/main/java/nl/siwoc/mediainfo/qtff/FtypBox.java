@@ -65,6 +65,7 @@ public class FtypBox extends Box {
 	        while (is.available() >= 4 && (brand = ReadUtils.readFourCC(is)) != null) {
 	            compBrands.add(brand);
 	        }
+	        Logger.logInfo(toString());
 		} catch (Exception e) {
 			throw e;
 		}

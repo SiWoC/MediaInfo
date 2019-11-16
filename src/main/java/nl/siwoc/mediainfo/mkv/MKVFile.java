@@ -85,8 +85,8 @@ public class MKVFile implements MediaInfo {
 				return "divx";
 			} else if ("V_MPEG4/ISO/SP".equals(getVideoTrack().getCodecID())) {
 				return "divx";
-			/*} else if ("V_MPEG4/ISO/ASP".equals(getVideoTrack().getCodecID())) {
-				return "xvid"; */
+			} else if ("V_MPEG4/ISO/ASP".equals(getVideoTrack().getCodecID())) {
+				return "xvid";
 			} else if ("V_MPEG4/ISO/AVC".equals(getVideoTrack().getCodecID())) {
 				return "h264";
 			} else {

@@ -41,31 +41,41 @@ public class ISOUtils {
 	}
 	
 	public static MediaInfo createDVD(ISO9660DiskImage iso) throws Exception {
-		DVDFile dvdFile = null;
+		DVDFile result = null;
+		int numberOfAudioChannels = 0;
 		for (int i = 1 ; i < 100 ; i++) {
 			String vtsFilename = "VIDEO_TS" + System.getProperty("file.separator") + "VTS_" + String.format("%02d", i) + "_0.IFO";
 			Logger.logInfo("Searching vts-file: " + vtsFilename);
 			ISO9660DiskImageFS vtsFile = iso.getFile(vtsFilename);
 			if (vtsFile == null) {
-				throw new Exception("No DVD ISO file [VTS_xx_0.IFO] found.");
+				if (result != null) {
+					return result;
+				} else {
+					throw new Exception("No DVD ISO file [VTS_xx_0.IFO] found.");
+				}
 			}
-			byte[] vtsFileData = vtsFile.getData();
-			dvdFile = DVDFile.parseFromByteArray(vtsFileData);
-			dvdFile.setContainer("dvdiso");
-			if (dvdFile.getNumberOfAudioStreams() > 0) {
-				return dvdFile;
+			try {
+				byte[] vtsFileData = vtsFile.getData();
+				DVDFile dvdFile = DVDFile.parseFromByteArray(vtsFileData);
+				dvdFile.setContainer("dvdiso");
+				if (dvdFile.getNumberOfAudioStreams() > 0 && dvdFile.getAudioChannels() > numberOfAudioChannels) {
+					numberOfAudioChannels = dvdFile.getAudioChannels();
+					result = dvdFile;
+				}
+				Logger.logInfo("vts-file: " + vtsFilename + " has [" + numberOfAudioChannels + "] AudioChannels searching next IFO");
+			} catch (Exception e) {
+				Logger.logInfo("Unable to parse vts-file: " + vtsFilename + " skipping.");
 			}
-			Logger.logInfo("vts-file: " + vtsFilename + " has no AudioStreams searching next IFO");
 		}
-		return dvdFile;
+		return result;
 		//throw new Exception("No DVD ISO file [VTS_xx_0.IFO] found.");
 	}
 
 	public static void main (String args[]) throws Exception {
 		Logger.setLogLevel("TRACE");
 		//String filename = "O:/Kinder films/Early Man (2018)/Early Man (2018).iso";
-		//String filename = "O:/downloads/Aladdin (1992)/Aladdin (1992).mkv";
-		String filename = "O:/downloads/Hotel Transylvania 3 Summer Vacation (2018)/Hotel Transylvania 3 Summer Vacation (2018).iso";
+		String filename = "O:/Kinder films/Jasper & Julia en de Dappere Ridders/Jasper & Julia en de Dappere Ridders.iso";
+		//String filename = "O:/downloads/Hotel Transylvania 3 Summer Vacation (2018)/Hotel Transylvania 3 Summer Vacation (2018).iso";
 		MediaInfo iso = ISOUtils.parse(filename);
 		System.out.println(iso.getContainer());
 		System.out.println(iso.getVideoCodec());
