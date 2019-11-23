@@ -57,7 +57,9 @@ public class Box {
 	}
 	
 	public void addChild(Box child) {
-		children.add(child);
+		if (child != null) {
+			children.add(child);
+		}
 	}
 
 	public Box getParent() {
@@ -141,7 +143,6 @@ public class Box {
 		for (Box child : children) {
 			child.print(i + 1);
 		}
-		
 	}
 
 	public String toString() {
