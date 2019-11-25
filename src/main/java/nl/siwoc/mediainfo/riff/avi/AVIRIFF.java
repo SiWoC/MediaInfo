@@ -18,12 +18,16 @@ package nl.siwoc.mediainfo.riff.avi;
 
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.siwoc.mediainfo.MediaInfo;
 import nl.siwoc.mediainfo.riff.RIFFChunk;
-import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class AVIRIFF extends RIFFChunk implements MediaInfo{
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(AVIRIFF.class);
 
 	private HeaderList hdrl;
 
@@ -45,7 +49,7 @@ public class AVIRIFF extends RIFFChunk implements MediaInfo{
 			throw new Exception("Invalid AVI RIFF, unable to find headerlist LIST, found: " + fourCC);
 		}
 		int hdrlSize = ReadUtils.readInt32LE(is);
-		Logger.logDebug("hdrlSize: " + hdrlSize);
+		LOG.debug("hdrlSize: " + hdrlSize);
 		fourCC = ReadUtils.readFourCC(is);
 		if (!"hdrl".equals(fourCC)) {
 			throw new Exception("Invalid AVI RIFF, unable to find headerlist hdrl, found: " + fourCC);

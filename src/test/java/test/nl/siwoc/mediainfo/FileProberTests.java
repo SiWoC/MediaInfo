@@ -4,7 +4,6 @@ import org.junit.jupiter.api.*;
 
 import nl.siwoc.mediainfo.FileProber;
 import nl.siwoc.mediainfo.MediaInfo;
-import nl.siwoc.mediainfo.utils.Logger;
 
 class FileProberTests {
 
@@ -14,7 +13,6 @@ class FileProberTests {
 	static void beforeAll() {
 		System.out.println("Running setup");
 		fp = new FileProber();
-		Logger.setLogLevel("TRACE");
 	}
 
 

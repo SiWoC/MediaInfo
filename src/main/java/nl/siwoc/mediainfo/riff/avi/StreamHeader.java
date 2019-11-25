@@ -20,10 +20,14 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import nl.siwoc.mediainfo.riff.Chunk;
-import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class StreamHeader extends Chunk{
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(StreamHeader.class);
 
 	private String type;
 	private String handler;
@@ -152,7 +156,7 @@ public class StreamHeader extends Chunk{
 			setSampleSize(ReadUtils.readInt32LE(is));
 			//rcFrame rectangle follows, ignored
 
-			Logger.logInfo("Stream Header (strh):" + System.lineSeparator() +
+			LOG.info("Stream Header (strh):" + System.lineSeparator() +
 				"   type=[" + type + "]" + System.lineSeparator() +
 				"   handler=[" + handler + "]" + System.lineSeparator() +
 				"   flags=" + flags + System.lineSeparator() +

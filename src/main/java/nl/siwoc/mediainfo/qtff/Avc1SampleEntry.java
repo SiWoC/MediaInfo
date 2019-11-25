@@ -19,10 +19,14 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import nl.siwoc.mediainfo.utils.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class Avc1SampleEntry extends SampleEntry {
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(Avc1SampleEntry.class);
 	
 	private int width;
 	private int height;
@@ -47,7 +51,7 @@ public class Avc1SampleEntry extends SampleEntry {
 		setType("avc1");
 		setSize(size);
 		setParent(parent);
-		Logger.logInfo("Creating " + getType());
+		LOG.info("Creating " + getType());
         TrakBox trak = (TrakBox)searchUp("trak");
         if (trak != null) {
         	trak.setCodecId(getType());
@@ -70,7 +74,7 @@ public class Avc1SampleEntry extends SampleEntry {
 				trak.setWidth(getWidth());
 				trak.setHeight(getHeight());
 			}
-			Logger.logInfo(toString());
+			LOG.info(toString());
 			
 		} catch (Exception e) {
 			throw e;

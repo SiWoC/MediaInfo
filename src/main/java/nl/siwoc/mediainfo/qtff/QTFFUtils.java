@@ -21,13 +21,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import nl.siwoc.mediainfo.MediaInfo;
-import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class QTFFUtils {
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(QTFFUtils.class);
 
 	public static MediaInfo parse(String filename) throws Exception {
-		Logger.logInfo("Start parsing file: " + filename);
+		LOG.info("Start parsing file: " + filename);
 		try (FileInputStream fis = new FileInputStream(filename)) {
 			long remaining = new File(filename).length();
 			Box qtff = new Box();
@@ -38,7 +42,7 @@ public class QTFFUtils {
 					String fourCC = ReadUtils.readFourCC(fis);
 					byte[] childData;
 					remaining = remaining - atomSize;
-					Logger.logInfo("Found fourCC: [" + fourCC + "] with size [" + atomSize + "]");
+					LOG.info("Found fourCC: [" + fourCC + "] with size [" + atomSize + "]");
 					// only interested in metadata, skipping everything else
 					if (fourCC.equals("ftyp")) {
 						childData = new byte[(int) (atomSize - 8)];
@@ -61,13 +65,13 @@ public class QTFFUtils {
 				}
 			}
 			if (qtff.getChild("moov") != null && qtff.getChild("ftyp") == null) {
-				Logger.logInfo("moov without ftyp = mov.mp41");
+				LOG.info("moov without ftyp = mov.mp41");
 				qtff.addChild(new FtypBox("mp41", 0));
 			}
 			if (qtff.getChild("ftyp") == null) {
 				throw new Exception("No [ftyp], file is not QTFF/MOV/MP4");
 			}
-			if (Logger.isInTrace()) {
+			if (LOG.isTraceEnabled()) {
 				qtff.print(0);
 			}
 			MediaBox mb = new MediaBox(qtff);
@@ -81,7 +85,7 @@ public class QTFFUtils {
 	}
 
 	public static void main (String args[]) throws Exception {
-		Logger.setLogLevel("TRACE");
+		//Logger.setLogLevel("TRACE");
 		//String filename = "O:/Kinder films/Free Birds (2013)/Free Birds.mp4";
 		//String filename = "N:/Casper/huiswerk/Film NL/Dood.MOV";
 		String filename = "O:/Films/Glass (2019)/Glass (2019).mp4";

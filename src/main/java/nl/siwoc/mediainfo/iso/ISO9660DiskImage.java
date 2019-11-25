@@ -20,7 +20,9 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
 
-import nl.siwoc.mediainfo.utils.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 /* 
@@ -28,6 +30,8 @@ import nl.siwoc.mediainfo.utils.ReadUtils;
  * by Alessandro Mangone (Vektor) zevektor
  */
 public class ISO9660DiskImage {
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(ISO9660DiskImage.class);
 
 	private ISO9660DiskImageFS rootFS;
 	private RandomAccessFile raf;
@@ -73,9 +77,9 @@ public class ISO9660DiskImage {
 
 	private void createRootFS(byte[] data) throws Exception {
 		int startSector = ReadUtils.readInt32LE(data, 158);
-		Logger.logTrace("StartSector: " + startSector);
+		LOG.trace("StartSector: " + startSector);
 		int size = ReadUtils.readInt32LE(data, 166);
-		Logger.logTrace("Size: " + size);
+		LOG.trace("Size: " + size);
 		setRootFS(new ISO9660DiskImageFS(startSector, size, "", true, getRaf()));
 	}
 

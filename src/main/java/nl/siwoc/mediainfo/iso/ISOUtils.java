@@ -18,12 +18,15 @@ package nl.siwoc.mediainfo.iso;
 
 import nl.siwoc.mediainfo.MediaInfo;
 import nl.siwoc.mediainfo.dvd.DVDFile;
-import nl.siwoc.mediainfo.utils.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ISOUtils {
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(ISOUtils.class);
 
 	public static MediaInfo parse(String filename) throws Exception {
-		Logger.logInfo("Start parsing file: " + filename);
+		LOG.info("Start parsing file: " + filename);
 		ISO9660DiskImage f = null;
 		try {
 			f = new ISO9660DiskImage(filename);
@@ -45,7 +48,7 @@ public class ISOUtils {
 		int numberOfAudioChannels = 0;
 		for (int i = 1 ; i < 100 ; i++) {
 			String vtsFilename = "VIDEO_TS" + System.getProperty("file.separator") + "VTS_" + String.format("%02d", i) + "_0.IFO";
-			Logger.logInfo("Searching vts-file: " + vtsFilename);
+			LOG.info("Searching vts-file: " + vtsFilename);
 			ISO9660DiskImageFS vtsFile = iso.getFile(vtsFilename);
 			if (vtsFile == null) {
 				if (result != null) {
@@ -62,9 +65,9 @@ public class ISOUtils {
 					numberOfAudioChannels = dvdFile.getAudioChannels();
 					result = dvdFile;
 				}
-				Logger.logInfo("vts-file: " + vtsFilename + " has [" + numberOfAudioChannels + "] AudioChannels searching next IFO");
+				LOG.info("vts-file: " + vtsFilename + " has [" + numberOfAudioChannels + "] AudioChannels searching next IFO");
 			} catch (Exception e) {
-				Logger.logInfo("Unable to parse vts-file: " + vtsFilename + " skipping.");
+				LOG.info("Unable to parse vts-file: " + vtsFilename + " skipping.");
 			}
 		}
 		return result;
@@ -72,7 +75,7 @@ public class ISOUtils {
 	}
 
 	public static void main (String args[]) throws Exception {
-		Logger.setLogLevel("TRACE");
+		//Logger.setLogLevel("TRACE");
 		//String filename = "O:/Kinder films/Early Man (2018)/Early Man (2018).iso";
 		String filename = "O:/Kinder films/Jasper & Julia en de Dappere Ridders/Jasper & Julia en de Dappere Ridders.iso";
 		//String filename = "O:/downloads/Hotel Transylvania 3 Summer Vacation (2018)/Hotel Transylvania 3 Summer Vacation (2018).iso";

@@ -17,24 +17,29 @@
 package nl.siwoc.mediainfo.riff;
 
 import java.io.FileInputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.siwoc.mediainfo.MediaInfo;
 import nl.siwoc.mediainfo.riff.avi.AVIRIFF;
-import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class RIFFUtils {
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(RIFFUtils.class);
 
 	public static MediaInfo parse(String filename) throws Exception {
-		Logger.logInfo("Start parsing file: " + filename);
+		LOG.info("Start parsing file: " + filename);
 		try (FileInputStream fis = new FileInputStream(filename)) {
 			String fourCC = ReadUtils.readFourCC(fis);
-			Logger.logInfo("Found fourCC: [" + fourCC + "] should be [RIFF]");
+			LOG.info("Found fourCC: [" + fourCC + "] should be [RIFF]");
 			if (!"RIFF".equals(fourCC)) {
 				throw new Exception("File is not RIFF");
 			}
 			int size = ReadUtils.readInt32LE(fis);
 			String fileType = ReadUtils.readFourCC(fis);
-			Logger.logInfo("Found fileType: [" + fileType + "]");
+			LOG.info("Found fileType: [" + fileType + "]");
 			if (!"AVI ".equals(fileType)) {
 				throw new Exception("RIFF FileType: " + fileType + " is not supported");
 			}
@@ -45,7 +50,7 @@ public class RIFFUtils {
 	}
 
 	public static void main (String[] args) throws Exception {
-		Logger.setLogLevel("TRACE");
+		//Logger.setLogLevel("TRACE");
 		String filename = "O:\\Kinder films\\Monsters Versus Aliens - Cloning Around (2014)\\Monsters Versus Aliens - Cloning Around (2014) [ID imdb tt2782214].avi";
 		//String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
 		MediaInfo mediaInfo = RIFFUtils.parse(filename);

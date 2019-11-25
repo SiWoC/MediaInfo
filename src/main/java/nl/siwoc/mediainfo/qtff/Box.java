@@ -21,10 +21,14 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
-import nl.siwoc.mediainfo.utils.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class Box {
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(Box.class);
 
 	private String type;
 	private long size;
@@ -78,7 +82,7 @@ public class Box {
 				String childType = ReadUtils.readFourCC(is);
 				byte[] childData;
 				remaining = remaining - childSize;
-				Logger.logInfo("Parent: [" + getType() + "] has child: [" + childType + "] with size [" + childSize + "]");
+				LOG.info("Parent: [" + getType() + "] has child: [" + childType + "] with size [" + childSize + "]");
 				boolean skipNeeded = true;
 				String className = "nl.siwoc.mediainfo.qtff." + childType.substring(0, 1).toUpperCase() + childType.substring(1) + "Box";
 				try {
@@ -89,9 +93,9 @@ public class Box {
 					Constructor<?> ctor = clazz.getConstructor(Box.class, long.class, byte[].class);
 					addChild((Box) ctor.newInstance(new Object[] {parent, childSize, childData }));
 				} catch (Exception e) {
-					Logger.logWarning(e.getMessage());
+					LOG.warn(e.getMessage());
 					// unneeded/unsupported/unknown i.e. newInstance failed
-					Logger.logInfo("Unsupported childtype: [" + childType + "] className: " + className + " skipNeeded=" + skipNeeded);
+					LOG.info("Unsupported childtype: [" + childType + "] className: " + className + " skipNeeded=" + skipNeeded);
 					if (skipNeeded) {
 						is.skip(childSize - 8);
 					}
@@ -104,7 +108,7 @@ public class Box {
 
 	protected SampleEntry createSampleEntry(Box parent, long entrySize, String entryType, byte[] entryData) throws Exception {
 		try {
-			Logger.logInfo("Parent: [" + getType() + "] has sampleEntry: [" + entryType + "] with size [" + entrySize + "]");
+			LOG.info("Parent: [" + getType() + "] has sampleEntry: [" + entryType + "] with size [" + entrySize + "]");
 			// ac-3 > Ac3SampleEntry
 			entryType = entryType.replace("-", "");
 			String className = "nl.siwoc.mediainfo.qtff." + entryType.substring(0, 1).toUpperCase() + entryType.substring(1) + "SampleEntry";
@@ -114,7 +118,7 @@ public class Box {
 				return (SampleEntry)ctor.newInstance(new Object[] {parent, entrySize, entryData });
 			} catch (Exception e) {
 				// unneeded/unsupported/unknown i.e. newInstance failed
-				Logger.logInfo("Unsupported childtype: [" + entryType + "] className: " + className);
+				LOG.info("Unsupported childtype: [" + entryType + "] className: " + className);
 			}
 		} catch (Exception e) {
 			throw e;
@@ -124,9 +128,9 @@ public class Box {
 
     protected Box searchUp(String type) {
 		Box up = getParent();
-		Logger.logTrace("Searching up for [" + type + "]");
+		LOG.trace("Searching up for [" + type + "]");
 	    while (up != null) {
-	    	Logger.logTrace("Found up [" + up.getType() + "]");
+	    	LOG.trace("Found up [" + up.getType() + "]");
 	    	if (up.getType().equals(type)) {
 	    		return up;
 	    	}

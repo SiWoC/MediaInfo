@@ -20,10 +20,14 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import nl.siwoc.mediainfo.riff.Chunk;
-import nl.siwoc.mediainfo.utils.Logger;
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainHeader extends Chunk {
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(MainHeader.class);
 
 	private int microSecondsPerFrame;
 	private int maxBytesPerSecond;
@@ -132,7 +136,7 @@ public class MainHeader extends Chunk {
 			setFrameHeight(ReadUtils.readInt32LE(is));
 			// dwReserved[4] follows, ignored
 
-			Logger.logInfo("AVI HEADER (avih): " + System.lineSeparator() +
+			LOG.info("AVI HEADER (avih): " + System.lineSeparator() +
 				"   microSecondsPerFrame=" + getMicroSecondsPerFrame() + System.lineSeparator() +
 				"   maxBytesPerSecond=" + getMaxBytesPerSecond() + System.lineSeparator() +
 				"   paddingGranularity=" + getPaddingGranularity() + System.lineSeparator() +

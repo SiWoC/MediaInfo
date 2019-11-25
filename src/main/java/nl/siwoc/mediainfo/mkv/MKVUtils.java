@@ -17,17 +17,20 @@
 package nl.siwoc.mediainfo.mkv;
 
 import nl.siwoc.mediainfo.MediaInfo;
-import nl.siwoc.mediainfo.utils.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MKVUtils {
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(MKVUtils.class);
 
 	public static MediaInfo parse(String filename) throws Exception {
-		Logger.logInfo("Start parsing file: " + filename);
+		LOG.info("Start parsing file: " + filename);
 		return new MKVFile(filename);
 	}
 	
 	public static void main (String[] args) throws Exception {
-		Logger.setLogLevel("TRACE");
+		//Logger.setLogLevel("TRACE");
 
 		//String filename = "O:/downloads/Wallace and Gromit - A Matter of Loaf and Death (2008)/Wallace and Gromit - A Matter of Loaf and Death (2008).mkv";
 		//String filename = "O:/Films/Pacific Rim Uprising (2018)/Pacific Rim Uprising (2018).mkv";

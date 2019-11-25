@@ -20,10 +20,14 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 
-import nl.siwoc.mediainfo.utils.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class TkhdBox extends FullBox {
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(TkhdBox.class);
 
     private BigDecimal creationTime;
     private BigDecimal modificationTime;
@@ -124,7 +128,7 @@ public class TkhdBox extends FullBox {
 		setType("tkhd");
 		setSize(size);
 		setParent(parent);
-		Logger.logInfo("Creating " + getType());
+		LOG.info("Creating " + getType());
 		try (InputStream is = new ByteArrayInputStream(data)){
 	        setVersion(is.read());
 	        setFlag(ReadUtils.readFlag(is));
@@ -152,7 +156,7 @@ public class TkhdBox extends FullBox {
         	}
         	setWidth(ReadUtils.readUInt32BE(is));
         	setHeight(ReadUtils.readUInt32BE(is));
-        	Logger.logInfo(toString());
+        	LOG.info(toString());
 	        // don't need rest at this moment
 		} catch (Exception e){
 			throw e;

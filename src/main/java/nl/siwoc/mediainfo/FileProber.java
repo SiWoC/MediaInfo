@@ -19,15 +19,20 @@ package nl.siwoc.mediainfo;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.siwoc.mediainfo.dvd.DVDUtils;
 import nl.siwoc.mediainfo.iso.ISOUtils;
 import nl.siwoc.mediainfo.mkv.MKVUtils;
 import nl.siwoc.mediainfo.qtff.QTFFUtils;
 import nl.siwoc.mediainfo.riff.RIFFUtils;
-import nl.siwoc.mediainfo.utils.Logger;
 
 public class FileProber {
 
+	protected static final Logger LOG = LoggerFactory.getLogger(FileProber.class);
+	
 	public static void main(String[] args) {
 		String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
 		//String filename = "O:/Series/Red Dwarf/S01/Red Dwarf S01E01 - The End.avi";
@@ -40,10 +45,10 @@ public class FileProber {
 		//ISO BR not zip
 		//String filename = "O:/downloads/Hotel Transylvania 3 Summer Vacation (2018)/Hotel Transylvania 3 Summer Vacation (2018).iso";
 		FileProber fp = new FileProber();
-		Logger.setLogLevel("DEBUG");
+		//LOG.setLogLevel("DEBUG");
 		MediaInfo mediaInfo = fp.getMediaInfo(filename);
 		if (mediaInfo != null) {
-			Logger.logInfo(mediaInfo.getClass().getSimpleName() + System.lineSeparator() + 
+			LOG.info(mediaInfo.getClass().getSimpleName() + System.lineSeparator() + 
 					"  container: [" + mediaInfo.getContainer() + "]" + System.lineSeparator() +
 					"  videocodec: " + mediaInfo.getVideoCodec() + System.lineSeparator() +
 					"  width: " + mediaInfo.getFrameWidth() + System.lineSeparator() +
@@ -58,31 +63,31 @@ public class FileProber {
 		try {
 			return DVDUtils.parse(filename);
 		} catch (Exception e) {
-			Logger.logInfo(e.getMessage());
+			LOG.info(e.getMessage());
 		}
 		try {
 			return RIFFUtils.parse(filename);
 		} catch (Exception e) {
-			Logger.logInfo(e.getMessage());
+			LOG.info(e.getMessage());
 		}
 		try {
 			return MKVUtils.parse(filename);
 		} catch (Exception e) {
-			Logger.logInfo(e.getMessage());
+			LOG.info(e.getMessage());
 		}
 		try {
 			return QTFFUtils.parse(filename);
 		} catch (Exception e) {
-			Logger.logInfo(e.getMessage());
+			LOG.info(e.getMessage());
 		}
 		try {
 			return ISOUtils.parse(filename);
 		} catch (Exception e) {
-			Logger.logInfo(e.getMessage());
+			LOG.info(e.getMessage());
 		}
 		
 		try (FileInputStream fis = new FileInputStream(filename)){
-			Logger.logTrace("Unknown filetype of length: " + new File(filename).length());
+			LOG.trace("Unknown filetype of length: " + new File(filename).length());
 			byte[] b = new byte[500000];
 			//fis.skip(32768); // 16 sectors of ISO9660 DiskImage
 			fis.read(b);

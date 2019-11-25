@@ -20,15 +20,19 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 import nl.siwoc.mediainfo.MediaInfo;
-import nl.siwoc.mediainfo.utils.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DVDUtils {
 
+	protected static final Logger LOG = LoggerFactory.getLogger(DVDUtils.class);
+	
 	public static MediaInfo parse(String filename) throws Exception {
-		Logger.logInfo("Start parsing file: " + filename);
+		LOG.info("Start parsing file: " + filename);
 		File file = new File(filename);
 		if (file.getName().matches("VTS_\\d\\d_0.IFO")) {
-			Logger.logDebug("Found DVD-file at: " + file.getAbsolutePath());
+			LOG.debug("Found DVD-file at: " + file.getAbsolutePath());
 			return DVDFile.parseFromFile(file.getAbsolutePath());
 		} else if (file.isDirectory() && file.getName().equals("VIDEO_TS")) {
 			return parseVTS(file);
@@ -70,7 +74,7 @@ public class DVDUtils {
 	}
 
 	public static void main (String args[]) throws Exception {
-		Logger.setLogLevel("TRACE");
+		//Logger.setLogLevel("TRACE");
 		//String filename = "O:\\Kinder films\\Flight of the Navigator (1986)\\VIDEO_TS\\VTS_01_0.IFO";
 		String filename = "O:/Kinder films/G-Force (2009)/VIDEO_TS/VTS_07_0.IFO";
 		MediaInfo dvd = DVDUtils.parse(filename);

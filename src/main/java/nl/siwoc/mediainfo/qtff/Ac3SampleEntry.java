@@ -19,10 +19,14 @@ package nl.siwoc.mediainfo.qtff;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import nl.siwoc.mediainfo.utils.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class Ac3SampleEntry extends SampleEntry {
+	
+	protected static final Logger LOG = LoggerFactory.getLogger(Ac3SampleEntry.class);
 	
 	private int channelCount;
 	private int sampleSize;
@@ -56,7 +60,7 @@ public class Ac3SampleEntry extends SampleEntry {
 		setType("ac3");
 		setSize(size);
 		setParent(parent);
-		Logger.logInfo("Creating " + getType());
+		LOG.info("Creating " + getType());
         TrakBox trak = (TrakBox)searchUp("trak");
         if (trak != null) {
         	trak.setCodecId(getType());
@@ -78,7 +82,7 @@ public class Ac3SampleEntry extends SampleEntry {
 			if (trak != null) {
 				trak.setChannelCount(getChannelCount());
 			}
-			Logger.logInfo(toString());
+			LOG.info(toString());
 			
 		} catch (Exception e) {
 			throw e;
