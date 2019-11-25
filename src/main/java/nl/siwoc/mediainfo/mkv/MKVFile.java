@@ -16,7 +16,6 @@
  *******************************************************************************/
 package nl.siwoc.mediainfo.mkv;
 
-import org.ebml.io.DataSource;
 import org.ebml.io.FileDataSource;
 import org.ebml.matroska.MatroskaFile;
 import org.ebml.matroska.MatroskaFileTrack;
