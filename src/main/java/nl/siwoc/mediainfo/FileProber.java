@@ -19,6 +19,8 @@ package nl.siwoc.mediainfo;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,18 +88,21 @@ public class FileProber {
 			LOG.info(e.getMessage());
 		}
 		
-		try (FileInputStream fis = new FileInputStream(filename)){
-			LOG.trace("Unknown filetype of length: " + new File(filename).length());
-			byte[] b = new byte[500000];
-			//fis.skip(32768); // 16 sectors of ISO9660 DiskImage
-			fis.read(b);
-			fis.close();
-			FileOutputStream fos = new FileOutputStream("log/unknownfile.txt");
-			fos.write(b);
-			fos.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (LOG.isTraceEnabled()) {
+			try (FileInputStream fis = new FileInputStream(filename)){
+				Files.createDirectory(new File("log").toPath());
+				LOG.trace("Unknown filetype of length: " + new File(filename).length());
+				byte[] b = new byte[500000];
+				//fis.skip(32768); // 16 sectors of ISO9660 DiskImage
+				fis.read(b);
+				fis.close();
+				FileOutputStream fos = new FileOutputStream("log/unknownfile.txt");
+				fos.write(b);
+				fos.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return null;
