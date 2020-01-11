@@ -17,6 +17,8 @@
 package nl.siwoc.mediainfo.utils;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
@@ -234,6 +236,16 @@ public class ReadUtils {
 	public static int getThreeBits(int b, int position)
 	{
 	   return (b >> position) & 7;
+	}
+	
+	public static void dumpData(byte[] data, String filename) {
+		
+		try (FileOutputStream fos = new FileOutputStream(filename)){
+			fos.write(data);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {

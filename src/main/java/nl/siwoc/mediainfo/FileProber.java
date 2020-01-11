@@ -18,10 +18,7 @@ package nl.siwoc.mediainfo;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +27,7 @@ import nl.siwoc.mediainfo.iso.ISOUtils;
 import nl.siwoc.mediainfo.mkv.MKVUtils;
 import nl.siwoc.mediainfo.qtff.QTFFUtils;
 import nl.siwoc.mediainfo.riff.RIFFUtils;
+import nl.siwoc.mediainfo.utils.ReadUtils;
 
 public class FileProber {
 
@@ -96,9 +94,7 @@ public class FileProber {
 				//fis.skip(32768); // 16 sectors of ISO9660 DiskImage
 				fis.read(b);
 				fis.close();
-				FileOutputStream fos = new FileOutputStream("log/unknownfile.txt");
-				fos.write(b);
-				fos.close();
+				ReadUtils.dumpData(b, "log/unknownfile.txt");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
