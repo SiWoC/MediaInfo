@@ -34,7 +34,8 @@ public class FileProber {
 	protected static final Logger LOG = LoggerFactory.getLogger(FileProber.class);
 	
 	public static void main(String[] args) {
-		String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
+		String filename = "O:/downloads/The.Curse.of.Oak.Island.S09E04.Spoils.Alert.720p.HEVC.x265-MeGusta/The.Curse.of.Oak.Island.S09E04.Spoils.Alert.720p.HEVC.x265-MeGusta.mkv";
+		//String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";
 		//String filename = "O:/Series/Red Dwarf/S01/Red Dwarf S01E01 - The End.avi";
 		//String filename = "O:/downloads/Aladdin (1992)/Aladdin (1992).mkv";
 		//String filename = "O:\\downloads\\The Throwaways (2015)\\Vectronic Presents _ The Throwaways (2015) 720p.WEB-DL.AC3_x264. NL Subs Ingebakken\\The Throwaways (2015) 720p.WEB-DL.AC3_x264.avi";

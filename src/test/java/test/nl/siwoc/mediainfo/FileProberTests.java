@@ -83,6 +83,24 @@ class FileProberTests {
 		}
 	}
 	
+	// "O:/downloads/The.Curse.of.Oak.Island.S09E04.Spoils.Alert.720p.HEVC.x265-MeGusta/The.Curse.of.Oak.Island.S09E04.Spoils.Alert.720p.HEVC.x265-MeGusta.mkv"
+	@Test
+	void testMKV_5() {
+		//MKV
+		String filename = "O:/downloads/The.Curse.of.Oak.Island.S09E04.Spoils.Alert.720p.HEVC.x265-MeGusta/The.Curse.of.Oak.Island.S09E04.Spoils.Alert.720p.HEVC.x265-MeGusta.mkv";
+		MediaInfo mediaInfo = fp.getMediaInfo(filename);
+		if (mediaInfo != null) {
+			Assertions.assertEquals("mkv", mediaInfo.getContainer());
+			Assertions.assertEquals("h265", mediaInfo.getVideoCodec());
+			Assertions.assertEquals(1280, mediaInfo.getFrameWidth());
+			Assertions.assertEquals(720, mediaInfo.getFrameHeight());
+			Assertions.assertEquals("aac", mediaInfo.getAudioCodec());
+			Assertions.assertEquals(2, mediaInfo.getAudioChannels());
+		} else {
+			Assertions.fail("No MediaInfo returned");
+		}
+	}
+	
 	@Test
 	void testAVI_1() {
 		String filename = "O:/downloads/Shazam (2019)/Shazam (2019).avi";

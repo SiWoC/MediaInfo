@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.siwoc.mediainfo</groupId>
 	<artifactId>MediaInfo</artifactId>
-	<version>1.0</version>
+	<version>1.0.1</version>
 	<name>MediaInfo</name>
 	<description>File parser to collect media info</description>
 
